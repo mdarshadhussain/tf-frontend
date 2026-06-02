@@ -862,12 +862,20 @@ const Attendance = () => {
         const result = await Promise.race([detectionsPromise, timeoutPromise]) as any;
         const { ref: refDetection, cap: capDetection } = result;
 
-        if (refDetection?.descriptor && capDetection?.descriptor) {
-          const distance = faceapi.euclideanDistance(refDetection.descriptor, capDetection.descriptor);
-          isMatch = distance < 0.6;
+        if (!refDetection?.descriptor) {
+          throw new Error("No human face detected in the employee's profile picture.");
         }
-      } catch (err) {
+        if (!capDetection?.descriptor) {
+          throw new Error("Face not clearly detected by the camera. Please stand closer and ensure good lighting.");
+        }
+        const distance = faceapi.euclideanDistance(refDetection.descriptor, capDetection.descriptor);
+        isMatch = distance < 0.65;
+      } catch (err: any) {
         console.error("Verification error:", err);
+        addToast(err.message || "Verification failed", 'error');
+        setIsScanning(false);
+        setScanStatus('idle');
+        return;
       }
     }
 

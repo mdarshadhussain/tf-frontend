@@ -26,7 +26,7 @@ const AddEmployee = () => {
   const { t } = useTranslation();
   const { id } = useParams();
   const isEditMode = !!id;
-  const { isAdmin } = useAuth();
+  const { isAdmin, user, updateUser } = useAuth();
   const navigate = useNavigate();
   const [sites, setSites] = useState<any[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -149,7 +149,10 @@ const AddEmployee = () => {
       if (files.idDoc) formDataToSend.append('idDoc', files.idDoc);
 
       if (isEditMode) {
-        await updateEmployee(id!, formDataToSend);
+        const updated = await updateEmployee(id!, formDataToSend);
+        if (user && user.id === id) {
+          updateUser({ ...user, ...updated });
+        }
       } else {
         if (!files.avatar) {
           throw new Error(t('profilePicMandatoryNew'));

@@ -451,12 +451,14 @@ const ManagerAttendance: React.FC = () => {
           const refDetection = await faceapi.detectSingleFace(referenceImg).withFaceLandmarks().withFaceDescriptor();
           const capDetection = await faceapi.detectSingleFace(capturedImg).withFaceLandmarks().withFaceDescriptor();
 
-          if (refDetection?.descriptor && capDetection?.descriptor) {
-            const distance = faceapi.euclideanDistance(refDetection.descriptor, capDetection.descriptor);
-            isMatch = distance < 0.6;
-          } else {
-            throw new Error("Could not detect face in reference or captured image.");
+          if (!refDetection?.descriptor) {
+            throw new Error("No human face detected in the employee's profile picture.");
           }
+          if (!capDetection?.descriptor) {
+            throw new Error("Face not clearly detected by the camera. Please stand closer and ensure good lighting.");
+          }
+          const distance = faceapi.euclideanDistance(refDetection.descriptor, capDetection.descriptor);
+          isMatch = distance < 0.65;
         } catch (err: any) {
           console.error("AI Face Verification error:", err);
           throw new Error(t('faceDetectionFailed', { message: err.message || "Face not detected" }));
