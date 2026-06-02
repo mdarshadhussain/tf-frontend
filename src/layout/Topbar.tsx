@@ -108,6 +108,9 @@ const Topbar = ({ onMenuClick, hideMenuBtn = false }: { onMenuClick?: () => void
               }
               alt="User" 
               className="user-avatar-mini"
+              onError={(e) => {
+                e.currentTarget.src = `https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.firstName || 'User'}`;
+              }}
             />
           </div>
         </div>
