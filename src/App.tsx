@@ -15,6 +15,7 @@ import ManagerAttendance from './pages/ManagerAttendance.tsx';
 import EmployeeDetails from './pages/EmployeeDetails.tsx';
 import CompleteProfile from './pages/CompleteProfile.tsx';
 import Holidays from './pages/Holidays.tsx';
+import NotFound from './pages/NotFound.tsx';
 import Sidebar from './layout/Sidebar';
 import Topbar from './layout/Topbar';
 import MobileNav from './layout/MobileNav';
@@ -101,8 +102,8 @@ function App() {
             <Route path="/profile" element={<ProtectedRoute><PlatformLayout><Profile /></PlatformLayout></ProtectedRoute>} />
             <Route path="/settings" element={<Navigate to="/profile" replace />} />
 
-            {/* Redirect any other path to Landing */}
-            <Route path="*" element={<Navigate to="/" replace />} />
+            {/* Render Custom 404 Page instead of redirecting */}
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </Router>
       </AuthProvider>
