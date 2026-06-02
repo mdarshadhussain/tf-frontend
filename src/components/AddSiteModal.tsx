@@ -406,13 +406,29 @@ const AddSiteModal = ({ isOpen, onClose, onSave, addToast, initialData }: AddSit
                     </div>
 
                     <div className="coord-preview-grid">
-                      <div className="coord-box">
-                        <span>{t('latitudeLabel')}</span>
-                        <code>{formData.latitude.toFixed(6)}</code>
+                      <div className="coord-box" style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                        <span style={{ fontSize: '10px', fontWeight: 700, color: 'var(--primary-color)', textTransform: 'uppercase', letterSpacing: '1px' }}>{t('latitudeLabel')}</span>
+                        <input 
+                          type="number" 
+                          step="any"
+                          value={formData.latitude || ''}
+                          onChange={(e) => setFormData({...formData, latitude: parseFloat(e.target.value) || 0})}
+                          style={{ width: '100%', padding: '4px 0', border: 'none', borderBottom: '1px solid var(--border-color)', background: 'transparent', fontSize: '14px', fontFamily: 'monospace', color: 'var(--text-primary)', outline: 'none' }}
+                          onFocus={(e) => e.target.style.borderBottom = '1px solid var(--primary-color)'}
+                          onBlur={(e) => e.target.style.borderBottom = '1px solid var(--border-color)'}
+                        />
                       </div>
-                      <div className="coord-box">
-                        <span>{t('longitudeLabel')}</span>
-                        <code>{formData.longitude.toFixed(6)}</code>
+                      <div className="coord-box" style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                        <span style={{ fontSize: '10px', fontWeight: 700, color: 'var(--primary-color)', textTransform: 'uppercase', letterSpacing: '1px' }}>{t('longitudeLabel')}</span>
+                        <input 
+                          type="number" 
+                          step="any"
+                          value={formData.longitude || ''}
+                          onChange={(e) => setFormData({...formData, longitude: parseFloat(e.target.value) || 0})}
+                          style={{ width: '100%', padding: '4px 0', border: 'none', borderBottom: '1px solid var(--border-color)', background: 'transparent', fontSize: '14px', fontFamily: 'monospace', color: 'var(--text-primary)', outline: 'none' }}
+                          onFocus={(e) => e.target.style.borderBottom = '1px solid var(--primary-color)'}
+                          onBlur={(e) => e.target.style.borderBottom = '1px solid var(--border-color)'}
+                        />
                       </div>
                     </div>
 
