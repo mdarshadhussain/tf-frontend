@@ -187,7 +187,7 @@ const CompleteProfile = () => {
                   <div className="section-header"><User size={20} /><h3>{t('coreIdentityAccess')}</h3></div>
                   <div className="avatar-edit-site">
                     <div className="avatar-preview-lg">
-                      {formData.avatar ? <img src={formData.avatar} alt="" /> : <User size={48} />}
+                      {formData.avatar ? <img src={formData.avatar} alt="" onError={(e) => { e.currentTarget.src = 'https://api.dicebear.com/7.x/avataaars/svg?seed=Fallback'; }} /> : <User size={48} />}
                       <label htmlFor="avatar-upload" className="upload-badge"><Camera size={18} /></label>
                     </div>
                     <input id="avatar-upload" type="file" hidden onChange={(e) => handleFileChange(e, 'avatar')} />

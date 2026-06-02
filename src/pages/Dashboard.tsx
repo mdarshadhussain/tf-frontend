@@ -854,7 +854,7 @@ const Dashboard = () => {
                 animate={{ scale: 1, opacity: 1 }}
                 className="user-avatar-watt"
               >
-                <img src={avatarSrc} alt="" />
+                <img src={avatarSrc} alt="" onError={(e) => { e.currentTarget.src = 'https://api.dicebear.com/7.x/avataaars/svg?seed=Fallback'; }} />
                 <div className="status-ring-watt"></div>
               </motion.div>
               <div className="welcome-group-watt">

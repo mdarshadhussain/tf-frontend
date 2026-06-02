@@ -1051,7 +1051,7 @@ const Payroll = () => {
                         <div className="emp-brief">
                           <div className="emp-initials">
                             {item.employee?.avatar ? (
-                              <img src={item.employee.avatar.startsWith('http') ? item.employee.avatar : `${API_URL}${item.employee.avatar.startsWith('/') ? item.employee.avatar : `/${item.employee.avatar}`}`} alt="avatar" style={{ width: '100%', height: '100%', borderRadius: '10px', objectFit: 'cover' }} />
+                              <img src={item.employee.avatar.startsWith('http') ? item.employee.avatar : `${API_URL}${item.employee.avatar.startsWith('/') ? item.employee.avatar : `/${item.employee.avatar}`}`} alt="avatar" style={{ width: '100%', height: '100%', borderRadius: '10px', objectFit: 'cover' }} onError={(e) => { e.currentTarget.src = 'https://api.dicebear.com/7.x/avataaars/svg?seed=Fallback'; }} />
                             ) : (
                               `${item.employee?.firstName?.[0] || ''}${item.employee?.lastName?.[0] || ''}`
                             )}
@@ -1109,7 +1109,7 @@ const Payroll = () => {
               <div className="header-text" style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '16px' }}>
                 <div className="emp-initials" style={{ width: '48px', height: '48px', fontSize: '18px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   {selectedEmployeeRecord?.employee?.avatar ? (
-                    <img src={selectedEmployeeRecord.employee.avatar.startsWith('http') ? selectedEmployeeRecord.employee.avatar : `${API_URL}${selectedEmployeeRecord.employee.avatar.startsWith('/') ? selectedEmployeeRecord.employee.avatar : `/${selectedEmployeeRecord.employee.avatar}`}`} alt="avatar" style={{ width: '100%', height: '100%', borderRadius: '10px', objectFit: 'cover' }} />
+                    <img src={selectedEmployeeRecord.employee.avatar.startsWith('http') ? selectedEmployeeRecord.employee.avatar : `${API_URL}${selectedEmployeeRecord.employee.avatar.startsWith('/') ? selectedEmployeeRecord.employee.avatar : `/${selectedEmployeeRecord.employee.avatar}`}`} alt="avatar" style={{ width: '100%', height: '100%', borderRadius: '10px', objectFit: 'cover' }} onError={(e) => { e.currentTarget.src = 'https://api.dicebear.com/7.x/avataaars/svg?seed=Fallback'; }} />
                   ) : (
                     `${selectedEmployeeRecord?.employee?.firstName?.[0] || ''}${selectedEmployeeRecord?.employee?.lastName?.[0] || ''}`
                   )}

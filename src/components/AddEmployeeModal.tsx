@@ -70,7 +70,7 @@ const AddEmployeeModal = ({ isOpen, onClose, onAdd }: AddEmployeeModalProps) => 
               <div className="profile-upload-section">
                 <div className="avatar-preview">
                   {formData.avatar ? (
-                    <img src={formData.avatar} alt="Preview" />
+                    <img src={formData.avatar} alt="Preview" onError={(e) => { e.currentTarget.src = 'https://api.dicebear.com/7.x/avataaars/svg?seed=Fallback'; }} />
                   ) : (
                     <User size={40} />
                   )}

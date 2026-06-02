@@ -122,7 +122,7 @@ const EmployeeDetails = () => {
         <div className="hero-avatar-wrapper">
           <div className="hero-avatar-large">
             {employee.avatar ? (
-              <img src={employee.avatar.startsWith('http') ? employee.avatar : `${API_URL}${employee.avatar}`} alt="" />
+              <img src={employee.avatar.startsWith('http') ? employee.avatar : `${API_URL}${employee.avatar}`} alt="" onError={(e) => { e.currentTarget.src = `https://api.dicebear.com/7.x/avataaars/svg?seed=${employee.firstName || 'User'}`; }} />
             ) : (
               <User size={64} />
             )}

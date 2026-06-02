@@ -293,7 +293,7 @@ const Landing = () => {
                                 <circle cx="50" cy="62" r="1" fill="var(--primary)" />
                               </svg>
                               <div className="scanning-beam"></div>
-                              <img src={SIMULATED_WORKERS[selectedWorkerIdx].avatar} alt="Scanner User" className="scanning-avatar-preview" />
+                              <img src={SIMULATED_WORKERS[selectedWorkerIdx].avatar} alt="Scanner User" className="scanning-avatar-preview" onError={(e) => { e.currentTarget.src = 'https://api.dicebear.com/7.x/avataaars/svg?seed=Fallback'; }} />
                             </div>
                             <span className="live-percentage">ANALYZING FACIAL SIGNATURE...</span>
                           </motion.div>
@@ -309,7 +309,7 @@ const Landing = () => {
                           >
                             <CheckCircle size={44} className="result-icon-success" />
                             <div className="result-profile-card">
-                              <img src={SIMULATED_WORKERS[selectedWorkerIdx].avatar} alt="" className="result-profile-avatar" />
+                              <img src={SIMULATED_WORKERS[selectedWorkerIdx].avatar} alt="" className="result-profile-avatar" onError={(e) => { e.currentTarget.src = 'https://api.dicebear.com/7.x/avataaars/svg?seed=Fallback'; }} />
                               <div className="result-profile-info">
                                 <h5>{SIMULATED_WORKERS[selectedWorkerIdx].name}</h5>
                                 <span className="profile-id">ID: {SIMULATED_WORKERS[selectedWorkerIdx].id}</span>
@@ -329,7 +329,7 @@ const Landing = () => {
                           >
                             <AlertTriangle size={44} className="result-icon-danger" />
                             <div className="result-profile-card">
-                              <img src={SIMULATED_WORKERS[selectedWorkerIdx].avatar} alt="" className="result-profile-avatar" />
+                              <img src={SIMULATED_WORKERS[selectedWorkerIdx].avatar} alt="" className="result-profile-avatar" onError={(e) => { e.currentTarget.src = 'https://api.dicebear.com/7.x/avataaars/svg?seed=Fallback'; }} />
                               <div className="result-profile-info">
                                 <h5>{SIMULATED_WORKERS[selectedWorkerIdx].name}</h5>
                                 <span className="profile-id">ID: {SIMULATED_WORKERS[selectedWorkerIdx].id}</span>
