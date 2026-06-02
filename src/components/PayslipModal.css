@@ -1,0 +1,204 @@
+.payslip-modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(8px);
+  z-index: 5000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+}
+
+.payslip-modal-content {
+  background: #fff;
+  width: 100%;
+  max-width: 800px;
+  max-height: 90vh;
+  border-radius: 24px;
+  overflow-y: auto;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  position: relative;
+  color: #1a1a1a;
+}
+
+.payslip-header-actions {
+  position: sticky;
+  top: 0;
+  right: 0;
+  padding: 16px 24px;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(4px);
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  z-index: 10;
+  border-bottom: 1px solid #eee;
+}
+
+.btn-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  border: 1px solid #eee;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: #666;
+}
+
+.btn-icon:hover {
+  background: #f8f9fa;
+  border-color: #ddd;
+  color: #000;
+}
+
+.btn-icon.close:hover {
+  background: #fee2e2;
+  color: #ef4444;
+  border-color: #fecaca;
+}
+
+.payslip-content-printable {
+  padding: 60px;
+}
+
+.receipt-container {
+  max-width: 450px;
+  margin: 0 auto;
+  color: #000;
+  font-family: 'Courier New', Courier, monospace;
+}
+
+.receipt-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.receipt-header h1 {
+  font-size: 28px;
+  margin: 0;
+  letter-spacing: 2px;
+}
+
+.receipt-header p {
+  font-size: 14px;
+  margin: 4px 0;
+  font-weight: bold;
+}
+
+.receipt-divider {
+  border-bottom: 2px solid #000;
+  margin: 10px 0;
+}
+
+.receipt-divider.dashed {
+  border-bottom: 1px dashed #000;
+}
+
+.receipt-section {
+  padding: 10px 0;
+}
+
+.receipt-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 6px;
+  font-size: 14px;
+}
+
+.receipt-total {
+  display: flex;
+  justify-content: space-between;
+  padding: 15px 0;
+  font-size: 20px;
+  font-weight: 900;
+  border-top: 2px solid #000;
+  border-bottom: 2px solid #000;
+  margin: 10px 0;
+}
+
+.receipt-footer {
+  text-align: center;
+  font-size: 12px;
+  margin-top: 20px;
+}
+
+.receipt-footer p {
+  margin: 4px 0;
+}
+
+.receipt-footer .timestamp {
+  font-size: 10px;
+  opacity: 0.6;
+}
+
+@media print {
+  @page {
+    margin: 2cm;
+    size: A4;
+  }
+
+  body * {
+    visibility: hidden !important;
+  }
+
+  #printable-payslip, #printable-payslip * {
+    visibility: visible !important;
+  }
+
+  #printable-payslip {
+    position: fixed !important;
+    left: 0 !important;
+    top: 0 !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #fff !important;
+    color: #000 !important;
+    display: block !important;
+  }
+
+  .receipt-container {
+    max-width: none !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .receipt-header h1 {
+    font-size: 36pt !important;
+    margin-bottom: 10pt !important;
+  }
+
+  .receipt-header p {
+    font-size: 20pt !important;
+  }
+
+  .receipt-section {
+    padding: 20pt 0 !important;
+  }
+
+  .receipt-row {
+    font-size: 16pt !important;
+    margin-bottom: 15pt !important;
+  }
+
+  .receipt-total {
+    font-size: 28pt !important;
+    padding: 25pt 0 !important;
+    margin: 20pt 0 !important;
+  }
+
+  .receipt-footer {
+    font-size: 14pt !important;
+    margin-top: 50pt !important;
+  }
+
+  .receipt-footer .timestamp {
+    font-size: 11pt !important;
+  }
+}

@@ -1,0 +1,137 @@
+.app-container {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+  background-color: var(--bg);
+  overflow: hidden;
+  position: relative;
+}
+
+.main-view-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(4px);
+  z-index: 1000;
+}
+
+.sidebar-overlay.active {
+  display: block;
+}
+
+.sidebar-wrapper {
+  width: 260px;
+  flex-shrink: 0;
+  height: 100vh;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 1100;
+  overflow: hidden;
+}
+
+.sidebar-wrapper.collapsed {
+  width: 80px;
+}
+
+[data-theme='dark'] .sidebar-wrapper {
+  background: var(--surface);
+  border-color: var(--border);
+}
+
+@media (max-width: 1024px) {
+  .sidebar-wrapper {
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100vh;
+    transform: translateX(-100%);
+    box-shadow: none;
+    width: 280px;
+  }
+
+  .sidebar-wrapper.mobile-open {
+    transform: translateX(0);
+    box-shadow: 20px 0 60px rgba(0, 0, 0, 0.2);
+  }
+
+  .main-view-wrapper {
+    width: 100%;
+  }
+}
+
+
+.main-stage {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  background: var(--bg);
+  overflow-y: auto;
+  overflow-x: hidden;
+  width: 100%;
+}
+
+.content-area {
+  flex: 1;
+  padding: 32px 40px;
+  width: 100%;
+  max-width: 100%;
+}
+
+@media (max-width: 768px) {
+  .content-area {
+    padding: 20px 16px;
+    width: 100%;
+  }
+}
+
+/* On mobile, add bottom padding for the fixed nav bar */
+@media (max-width: 1024px) {
+  .main-stage {
+    padding-bottom: 66px;
+  }
+
+  /* Hide the sidebar hamburger — bottom nav handles navigation */
+  .mobile-menu-btn {
+    display: none !important;
+  }
+}
+
+
+/* Page Transitions */
+.page-enter {
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+.page-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 300ms, transform 300ms;
+}
+
+.settings-layout-full {
+  background: var(--bg);
+}
+
+.main-stage.full-width {
+  width: 100%;
+}
+
+.main-stage.full-width .content-area {
+  max-width: 1600px;
+  margin: 0 auto;
+  width: 100%;
+}

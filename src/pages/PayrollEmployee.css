@@ -1,0 +1,234 @@
+/* Employee Payroll Redesign Styles */
+.employee-payroll-history {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.history-section-title {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  margin: 0 0 16px 0;
+}
+
+.active-cycle-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  padding: 24px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.active-cycle-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; width: 4px; height: 100%;
+  background: var(--warning);
+}
+
+.cycle-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px dashed var(--border);
+  padding-bottom: 16px;
+}
+
+.cycle-month {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+.cycle-status {
+  padding: 6px 12px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.cycle-status.pending {
+  background: var(--warning-bg);
+  color: var(--warning);
+}
+
+.cycle-body {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.cycle-metric {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: var(--surface-hover);
+  padding: 16px;
+  border-radius: 16px;
+  border: 1px solid var(--border);
+}
+
+.cycle-metric label {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+}
+
+.cycle-metric span {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+.cycle-metric.gross {
+  background: var(--primary-glow);
+  border-color: var(--primary);
+}
+
+.cycle-metric.gross label {
+  color: var(--primary);
+}
+
+.cycle-metric.gross span {
+  color: var(--primary);
+}
+
+.payslip-history-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.payslip-card-premium {
+  background: var(--glass);
+  backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  transition: all 0.3s ease;
+  box-shadow: var(--shadow-sm);
+}
+
+.payslip-card-premium:hover {
+  transform: translateY(-5px);
+  border-color: var(--primary);
+  box-shadow: 0 10px 30px rgba(59, 130, 246, 0.1);
+}
+
+.ps-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.ps-month {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--text-main);
+}
+
+.ps-status {
+  font-size: 10px;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: 10px;
+  text-transform: uppercase;
+}
+
+.ps-status.pending {
+  background: var(--warning-bg, #fef08a);
+  color: var(--warning, #854d0e);
+}
+.ps-status.processing {
+  background: #bfdbfe;
+  color: #1e40af;
+}
+.ps-status.paid {
+  background: var(--success, #bbf7d0);
+  color: #fff;
+}
+
+.ps-metrics {
+  display: flex;
+  gap: 12px;
+}
+
+.ps-metric {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--surface-hover);
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.ps-net {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: var(--surface-bright);
+  padding: 16px;
+  border-radius: 16px;
+  border: 1px solid var(--border);
+}
+
+.ps-net label {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+}
+
+.ps-amount {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-top: 4px;
+}
+
+.btn-view-slip {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  background: var(--primary, #3b82f6);
+  color: #ffffff;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 13px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+}
+
+.btn-view-slip:hover {
+  background: #2563eb;
+  transform: translateY(-1px);
+}
+
+@media (max-width: 768px) {
+  .cycle-body {
+    grid-template-columns: 1fr;
+  }
+  .payslip-history-grid {
+    grid-template-columns: 1fr;
+  }
+}

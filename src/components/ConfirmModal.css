@@ -1,0 +1,106 @@
+.confirm-overlay {
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+}
+
+.confirm-modal-content {
+  width: 100%;
+  max-width: 480px;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  background: var(--surface);
+  backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  border-radius: 28px;
+  box-shadow: var(--shadow-lg);
+}
+
+.confirm-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  text-align: center;
+  position: relative;
+}
+
+.confirm-header .close-btn {
+  position: absolute;
+  top: -16px;
+  right: -16px;
+}
+
+.icon-badge {
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(245, 158, 11, 0.1);
+  color: var(--primary);
+}
+
+.variant-danger .icon-badge {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+}
+
+.confirm-header h3 {
+  font-size: 22px;
+  font-weight: 700;
+  margin: 0;
+  color: var(--text-primary);
+}
+
+.confirm-body {
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.variant-danger .confirm-body {
+  color: var(--error);
+  font-weight: 500;
+}
+
+.confirm-footer {
+  display: flex;
+  gap: 12px;
+}
+
+.confirm-footer .btn {
+  flex: 1;
+  justify-content: center;
+}
+
+.confirm-footer .btn-ghost {
+  color: var(--text-secondary) !important;
+  border: 1px solid var(--border) !important;
+  background: var(--surface-hover) !important;
+  font-weight: 600;
+}
+
+.confirm-footer .btn-ghost:hover {
+  background: var(--border) !important;
+  color: var(--text-primary) !important;
+  border-color: var(--text-tertiary) !important;
+}
+
+.btn-danger {
+  background: #ef4444 !important;
+  color: #fff !important;
+  border: none !important;
+}
+
+.btn-danger:hover {
+  background: #dc2626 !important;
+  box-shadow: 0 0 20px rgba(239, 68, 68, 0.3);
+}

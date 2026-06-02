@@ -1,0 +1,221 @@
+.complete-profile-page {
+  padding: 2rem;
+  max-width: 1300px;
+  margin: 0 auto;
+}
+
+.form-grid-layout {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.form-section-card {
+  padding: 2rem;
+  height: 100%;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 2rem;
+  color: var(--primary);
+}
+
+.section-header h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin: 0;
+}
+
+.form-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+/* Biometric Hub */
+.biometric-site {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 1.5rem;
+}
+
+.biometric-visual {
+  width: 140px;
+  height: 140px;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 2px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.5s ease;
+}
+
+.biometric-visual.active {
+  border-color: var(--primary);
+  background: rgba(16, 185, 129, 0.05);
+  box-shadow: 0 0 30px rgba(16, 185, 129, 0.15);
+}
+
+.biometric-visual.scanning {
+  border-color: var(--primary);
+}
+
+.scanner-simulation {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.scan-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: var(--primary);
+  box-shadow: 0 0 15px var(--primary);
+  z-index: 10;
+  animation: scanMove 2s infinite ease-in-out;
+}
+
+@keyframes scanMove {
+  0% { top: 0; }
+  50% { top: 100%; }
+  100% { top: 0; }
+}
+
+.faint-icon {
+  opacity: 0.2;
+  animation: pulseOpacity 1s infinite alternate;
+}
+
+@keyframes pulseOpacity {
+  from { opacity: 0.1; }
+  to { opacity: 0.3; }
+}
+
+.verified-badge-premium {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(16, 185, 129, 0.1);
+  color: #10b981;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+/* Document Upload */
+.upload-box-premium {
+  position: relative;
+  height: 80px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 2px dashed var(--border);
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.upload-box-premium:hover {
+  border-color: var(--primary);
+  background: rgba(16, 185, 129, 0.05);
+}
+
+.upload-box-premium span {
+  font-size: 0.75rem;
+  color: var(--text-tertiary);
+}
+
+.upload-box-premium input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.avatar-edit-site {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+.avatar-preview-lg {
+  position: relative;
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  border: 3px solid var(--primary);
+  background: var(--glass-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.avatar-preview-lg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.upload-badge {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background: var(--primary);
+  color: white;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border: 2px solid var(--bg-dark);
+}
+
+.form-actions-compact {
+  margin-top: 2rem;
+}
+
+.w-full {
+  width: 100%;
+}
+
+@media (max-width: 1024px) {
+  .form-grid-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .complete-profile-page { padding: 1rem; }
+  .form-section-card { padding: 1.5rem; }
+  .form-grid-2 { grid-template-columns: 1fr; gap: 1rem; }
+  .biometric-visual { width: 120px; height: 120px; }
+  .section-header { margin-bottom: 1.5rem; }
+}
+

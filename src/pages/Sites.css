@@ -1,0 +1,540 @@
+.sites-page {
+  height: calc(100vh - 80px);
+  margin: -32px -40px; /* Offset content-area padding */
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--bg);
+  padding-bottom: 32px;
+}
+
+.sites-layout {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 480px;
+  overflow: hidden;
+  height: 100%;
+  padding-right: 32px; /* Space from right edge */
+  gap: 20px;
+}
+
+.sites-list-section {
+  padding: 32px 40px;
+  overflow-y: auto;
+  height: 100%;
+  scrollbar-gutter: stable; /* Keeps scrollbar in place */
+}
+
+/* Custom Scrollbar for the list section */
+.sites-list-section::-webkit-scrollbar {
+  width: 10px;
+}
+
+.sites-list-section::-webkit-scrollbar-track {
+  background: var(--bg);
+  border-left: 1px solid var(--border);
+}
+
+.sites-list-section::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 5px;
+  border: 2px solid var(--bg);
+}
+
+.sites-list-section::-webkit-scrollbar-thumb:hover {
+  background: var(--primary);
+}
+
+.map-preview-section {
+  height: 100%;
+  background: transparent;
+  z-index: 10;
+  padding-top: 32px;
+  padding-bottom: 32px;
+}
+
+.search-filter-card {
+  padding: 12px 20px;
+  margin-bottom: 24px;
+}
+
+.search-box {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.search-box input {
+  background: transparent;
+  border: none;
+  color: var(--text-main);
+  outline: none;
+  width: 100%;
+}
+
+.sites-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 16px;
+}
+
+@media (min-width: 1400px) {
+  .sites-grid {
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  }
+}
+
+/* Premium Site Card Redesign - Brand Edition */
+.site-card {
+  padding: 0 !important;
+  overflow: visible; /* Allow badge to overlap */
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--border);
+  border-radius: 20px; /* Explicitly add rounding */
+  transition: all 0.4s var(--ease-premium);
+  min-height: 180px;
+  background: var(--surface);
+  position: relative;
+  box-shadow: var(--shadow-sm);
+}
+
+.site-card:hover {
+  transform: translateY(-5px);
+  border-color: var(--primary);
+  box-shadow: var(--shadow-lg), 0 0 15px var(--primary-glow);
+}
+
+.site-card.managed-site {
+  border: 2px solid var(--primary);
+  /* Background color is now consistent with other cards */
+}
+
+.site-card-header-premium {
+  padding: 12px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  background: transparent;
+}
+
+.site-identity {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.site-icon-premium {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: var(--surface-hover);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  flex-shrink: 0;
+}
+
+.site-title-group h3 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--text-primary);
+  letter-spacing: -0.01em;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  line-height: 1.2;
+}
+
+.address-premium {
+  margin: 1px 0 0;
+  font-size: 10px;
+  color: var(--text-secondary);
+  font-weight: 500;
+  display: block; /* Show full address */
+  line-height: 1.3;
+}
+
+.status-badge-premium {
+  padding: 2px 6px;
+  background: var(--primary-glow);
+  border: 1px solid var(--primary);
+  color: var(--primary);
+  border-radius: 5px;
+  font-size: 8px;
+  font-weight: 900;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+
+.site-card-content-premium {
+  padding: 0 16px 12px;
+  flex: 1;
+}
+
+.intel-row-premium {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+
+.intel-item-premium {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 10px 14px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transition: all 0.3s ease;
+}
+
+.intel-item-premium:hover {
+  background: var(--surface-bright);
+  border-color: var(--primary);
+}
+
+.intel-item-premium svg {
+  color: var(--primary);
+  opacity: 0.8;
+  flex-shrink: 0;
+}
+
+.intel-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.intel-value {
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--text-main);
+}
+
+.intel-label {
+  font-size: 9px;
+  color: var(--text-tertiary);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.site-card-footer-premium {
+  padding: 12px 16px;
+  background: transparent;
+  margin-top: auto;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+}
+
+.btn-center-map {
+  width: 100%;
+  padding: 8px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-secondary);
+  font-size: 11px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: all 0.3s var(--ease-premium);
+}
+
+.btn-center-map:hover {
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
+  box-shadow: 0 0 15px var(--primary-glow);
+}
+
+.icon-btn-premium {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text-tertiary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-left: 8px;
+}
+
+.icon-btn-premium.edit {
+  background: var(--success-bg);
+  color: var(--success);
+  border: 1px solid var(--accent-glow);
+}
+
+.icon-btn-premium.edit:hover {
+  background: var(--success);
+  color: #fff;
+}
+
+.icon-btn-premium.delete {
+  background: var(--error-bg);
+  color: var(--error);
+  border: 1px solid var(--error-bg);
+}
+
+.assigned-badge-on-border {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--primary);
+  color: white;
+  padding: 4px 16px;
+  border-radius: 20px;
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  box-shadow: 0 4px 10px rgba(59, 130, 246, 0.3);
+  z-index: 10;
+}
+
+.icon-btn-premium.edit:hover {
+  background: var(--success-bg);
+  color: var(--success);
+  border-color: var(--success);
+}
+
+.icon-btn-premium.delete:hover {
+  background: var(--error-bg);
+  color: var(--error);
+  border-color: var(--error);
+}
+
+.site-actions-premium {
+  display: flex;
+}
+
+/* Map Preview */
+.map-preview-card {
+  padding: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  background: var(--surface);
+  box-shadow: var(--shadow-lg);
+}
+
+.map-header {
+  padding: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+
+.map-legend {
+  display: flex;
+  gap: 12px;
+}
+
+.legend-item {
+  font-size: 11px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.legend-item.active::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--primary); }
+.legend-item.fence::before { content: ''; width: 6px; height: 6px; border-radius: 50%; border: 1px dashed var(--primary); }
+
+.map-visual-real {
+  flex: 1;
+  background: var(--surface-hover);
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.leaflet-tile {
+  filter: none;
+  transition: filter 0.3s ease;
+}
+
+[data-theme='dark'] .leaflet-tile {
+  filter: invert(100%) hue-rotate(180deg) saturate(2.5) brightness(0.9) contrast(1.1) !important;
+}
+
+.leaflet-container {
+  background: var(--surface) !important;
+}
+
+.leaflet-control-attribution {
+  display: none !important;
+}
+
+.map-footer-info {
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  background: var(--surface);
+}
+
+@media (max-width: 1200px) {
+  .sites-page {
+    height: auto;
+    margin: 0;
+    overflow-y: auto;
+  }
+  .sites-layout { 
+    grid-template-columns: 1fr; 
+    padding: 0 16px;
+    height: auto;
+    overflow: visible;
+  }
+  .map-preview-section {
+    order: -1;
+    height: 520px;
+    padding: 16px 0;
+  }
+  .sites-list-section {
+    padding: 16px 0;
+    overflow: visible;
+    height: auto;
+  }
+}
+
+@media (max-width: 768px) {
+  .sites-page { 
+    height: 100vh;
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+  }
+  .sites-layout {
+    display: block;
+    height: 100%;
+    padding: 0;
+  }
+  .map-preview-section {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    margin: 0;
+  }
+  .map-preview-card {
+    height: 100%;
+    border-radius: 0;
+    border: none;
+    box-shadow: none;
+    background: transparent;
+  }
+  .map-header, .map-legend, .map-footer-info {
+    display: none !important;
+  }
+  .map-visual-real {
+    height: 100%;
+  }
+  .leaflet-control-container .leaflet-top {
+    top: 80px; /* Move zoom controls down to prevent overlap with top notch/header */
+  }
+  .sites-list-section {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    z-index: 10;
+    overflow-x: hidden;
+    padding: 16px 0 100px 0; /* Removing side padding here to allow edge-to-edge scrolling */
+    background: transparent;
+  }
+  .search-filter-card {
+    display: none; 
+  }
+  .sites-grid { 
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    gap: 16px; 
+    padding: 16px 16px 8px 16px; /* Added top padding to prevent badge clipping */
+    scrollbar-width: none;
+  }
+  .sites-grid::-webkit-scrollbar {
+    display: none;
+  }
+  .site-card { 
+    min-width: calc(100vw - 32px); /* Full width minus padding */
+    flex-shrink: 0; /* Prevent cards from squashing together */
+    scroll-snap-align: center;
+    min-height: auto; 
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+  }
+  .site-card-header-premium {
+    padding: 12px 16px;
+  }
+  .site-icon-premium {
+    width: 32px;
+    height: 32px;
+  }
+  .site-title-group h3 {
+    font-size: 15px;
+  }
+  .site-card-content-premium {
+    padding: 0 16px 12px;
+  }
+  .intel-row-premium {
+    grid-template-columns: 1fr 1fr; /* 2x2 grid for compact mode on map */
+    gap: 8px;
+  }
+  .intel-item-premium {
+    padding: 8px 10px;
+    gap: 8px;
+  }
+  .intel-value {
+    font-size: 13px;
+  }
+  .intel-label {
+    font-size: 9px;
+  }
+  .site-card-footer-premium {
+    padding: 10px 16px;
+  }
+  .btn-center-map {
+    padding: 8px;
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-title {
+    font-size: 24px;
+  }
+  .map-header {
+    padding: 16px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .map-legend {
+    width: 100%;
+    justify-content: space-between;
+  }
+}
