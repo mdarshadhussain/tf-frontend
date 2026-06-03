@@ -543,3 +543,13 @@ export const importEmployeesFromExcel = async (file: File) => {
   return data;
 };
 
+export const downloadEmployeeTemplate = async () => {
+  const response = await fetch(`${BASE_URL}/employees/template`, {
+    method: 'GET',
+    headers: getAuthHeaders()
+  });
+  
+  if (!response.ok) throw new Error('Failed to download template');
+  return response.blob();
+};
+

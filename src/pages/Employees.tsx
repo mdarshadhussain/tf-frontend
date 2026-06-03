@@ -15,7 +15,7 @@ import {
 import './Employees.css';
 
 import React, { useEffect, useState, useRef } from 'react';
-import { fetchEmployees, deleteEmployee, fetchSites, importEmployeesFromExcel } from '../api/api';
+import { fetchEmployees, deleteEmployee, fetchSites, importEmployeesFromExcel, downloadEmployeeTemplate } from '../api/api';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
@@ -48,21 +48,23 @@ const Employees = () => {
 
   const fileInputRef = React.useRef<HTMLInputElement>(null);
 
-  const downloadTemplate = () => {
-    const headers = ['Full Name', 'Employee ID', 'Initial Password', 'Date of Birth', 'Phone Number', 'Passport Number', 'Passport Issue', 'Passport Expiry', 'Salary Per Hour', 'Overtime Protocol', 'Overtime Value', 'Access Level', 'Assigned Site ID', 'Designation', 'Bank Name', 'Account Number', 'Account Holder Name'];
-    const sample = ['John Doe', 'TF001', '12345678', '01-01-1990', '+15550000000', 'A12345678', '01-01-2020', '01-01-2030', '50000', 'Multiplier', '1.5', 'EMPLOYEE', '', 'Site Manager', 'Vietcombank', '0123456789', 'JOHN DOE'];
-    
-    const csvContent = "data:text/csv;charset=utf-8," 
-        + headers.join(',') + '\n' 
-        + sample.join(',');
-        
-    const encodedUri = encodeURI(csvContent);
-    const link = document.createElement("a");
-    link.setAttribute("href", encodedUri);
-    link.setAttribute("download", "employee_import_template.csv");
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    const downloadTemplate = async () => {
+    try {
+      setLoading(true);
+      const blob = await downloadEmployeeTemplate();
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", "Employee_Import_Template.xlsx");
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (err: any) {
+      addToast(err.message || 'Failed to download template', 'error');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
