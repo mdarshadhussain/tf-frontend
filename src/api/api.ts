@@ -534,7 +534,7 @@ export const importEmployeesFromExcel = async (file: File) => {
   
   const response = await fetch(`${BASE_URL}/employees/import`, {
     method: 'POST',
-    headers: getAuthHeaders(),
+    headers: getAuthHeaders(true),
     body: formData
   });
   
