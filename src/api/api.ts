@@ -528,3 +528,18 @@ export const deleteHoliday = async (id: string) => {
   return response.json();
 };
 
+export const importEmployeesFromExcel = async (file: File) => {
+  const formData = new FormData();
+  formData.append('file', file);
+  
+  const response = await fetch(`${BASE_URL}/employees/import`, {
+    method: 'POST',
+    headers: getAuthHeaders(),
+    body: formData
+  });
+  
+  const data = await response.json();
+  if (!response.ok) throw new Error(data.error || 'Failed to import employees');
+  return data;
+};
+

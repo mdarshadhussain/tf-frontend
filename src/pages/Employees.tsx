@@ -12,8 +12,8 @@ import {
 
 import './Employees.css';
 
-import { useEffect, useState } from 'react';
-import { fetchEmployees, deleteEmployee, fetchSites } from '../api/api';
+import React, { useEffect, useState, useRef } from 'react';
+import { fetchEmployees, deleteEmployee, fetchSites, importEmployeesFromExcel } from '../api/api';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
@@ -43,6 +43,47 @@ const Employees = () => {
   const [toasts, setToasts] = useState<any[]>([]);
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [employeeToDelete, setEmployeeToDelete] = useState<string | null>(null);
+
+  const fileInputRef = React.useRef<HTMLInputElement>(null);
+
+  const downloadTemplate = () => {
+    const headers = ['Employee ID', 'First Name', 'Last Name', 'Email', 'Phone', 'Role', 'Designation', 'Password', 'Site ID', 'Hourly Rate'];
+    const sample = ['EMP001', 'John', 'Doe', 'john@example.com', '+1234567890', 'EMPLOYEE', 'Engineer', '123456', '', '25'];
+    
+    const csvContent = "data:text/csv;charset=utf-8," 
+        + headers.join(',') + '\n' 
+        + sample.join(',');
+        
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "employee_import_template.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    
+    try {
+      setLoading(true);
+      const res = await importEmployeesFromExcel(file);
+      addToast(res.message, 'success');
+      if (res.errors && res.errors.length > 0) {
+        // Show the first error as well if there were partial failures
+        addToast(`${res.errors.length} errors occurred, e.g. ${res.errors[0]}`, 'error');
+      }
+      loadEmployees();
+    } catch (err: any) {
+      addToast(err.message || 'Failed to import employees', 'error');
+    } finally {
+      setLoading(false);
+      if (fileInputRef.current) fileInputRef.current.value = '';
+    }
+  };
+
 
   const addToast = (message: string, type: ToastType = 'info') => {
     const id = Math.random().toString(36).substr(2, 9);
@@ -139,6 +180,20 @@ const Employees = () => {
             <p>{t('masterLedger')}</p>
           </div>
           <div className="header-actions">
+            <input 
+              type="file" 
+              accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" 
+              style={{ display: 'none' }} 
+              ref={fileInputRef}
+              onChange={handleFileUpload} 
+            />
+            <button className="btn btn-ghost" onClick={downloadTemplate}>
+              <FileSpreadsheet size={18} /> {t('Template')}
+            </button>
+            <button className="btn btn-ghost" onClick={() => fileInputRef.current?.click()}>
+              <Upload size={18} /> {t('Import')}
+            </button>
+
             <button className="btn btn-ghost" onClick={() => exportToCSV(filteredEmployees, `Workforce_Master_${new Date().toISOString().split('T')[0]}`)}>
               <Download size={18} /> {t('exportLedger')}
             </button>
