@@ -445,7 +445,12 @@ const ManagerAttendance: React.FC = () => {
       if (selectedEmployee.avatar && modelsLoaded) {
         try {
           const avatarUrl = selectedEmployee.avatar.startsWith('http') ? selectedEmployee.avatar : `${API_URL}${selectedEmployee.avatar}`;
-          const referenceImg = await faceapi.fetchImage(avatarUrl);
+          let referenceImg;
+          try {
+            referenceImg = await faceapi.fetchImage(avatarUrl);
+          } catch (fetchErr) {
+            throw new Error("Profile picture not found on the server. Please ask the employee to re-upload their photo.");
+          }
           const capturedImg = await faceapi.fetchImage(capturedFrame);
 
           const refDetection = await faceapi.detectSingleFace(referenceImg).withFaceLandmarks().withFaceDescriptor();

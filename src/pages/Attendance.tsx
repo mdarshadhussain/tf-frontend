@@ -777,7 +777,12 @@ const Attendance = () => {
       playSound('facial'); // Checking facial
 
       const detectionsPromise = (async () => {
-        const referenceImg = await faceapi.fetchImage(avatarUrl);
+        let referenceImg;
+        try {
+          referenceImg = await faceapi.fetchImage(avatarUrl);
+        } catch (fetchErr) {
+          throw new Error("Profile picture not found on the server. Please ask the administrator to re-upload your photo.");
+        }
         const capturedImg = await faceapi.fetchImage(biometricProof);
         const ref = await faceapi.detectSingleFace(referenceImg).withFaceLandmarks().withFaceDescriptor();
         const cap = await faceapi.detectSingleFace(capturedImg).withFaceLandmarks().withFaceDescriptor();
@@ -845,7 +850,12 @@ const Attendance = () => {
     if (modelsLoaded && user?.avatar) {
       try {
         const avatarUrl = user.avatar.startsWith('http') ? user.avatar : `${API_URL}${user.avatar}`;
-        const referenceImg = await faceapi.fetchImage(avatarUrl);
+        let referenceImg;
+        try {
+          referenceImg = await faceapi.fetchImage(avatarUrl);
+        } catch (fetchErr) {
+          throw new Error("Profile picture not found on the server. Please ask the administrator to re-upload your photo.");
+        }
         const capturedImg = await faceapi.fetchImage(biometricProof);
 
         // AI Timeout Guard
