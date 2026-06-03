@@ -49,8 +49,8 @@ const Employees = () => {
   const fileInputRef = React.useRef<HTMLInputElement>(null);
 
   const downloadTemplate = () => {
-    const headers = ['Employee ID', 'First Name', 'Last Name', 'Email', 'Phone', 'Role', 'Designation', 'Password', 'Site ID', 'Hourly Rate'];
-    const sample = ['EMP001', 'John', 'Doe', 'john@example.com', '+1234567890', 'EMPLOYEE', 'Engineer', '123456', '', '25'];
+    const headers = ['Full Name', 'Employee ID', 'Initial Password', 'Date of Birth', 'Phone Number', 'Passport Number', 'Passport Issue', 'Passport Expiry', 'Salary Per Hour', 'Overtime Protocol', 'Overtime Value', 'Access Level', 'Assigned Site ID', 'Designation', 'Bank Name', 'Account Number', 'Account Holder Name'];
+    const sample = ['John Doe', 'TF001', '12345678', '01-01-1990', '+15550000000', 'A12345678', '01-01-2020', '01-01-2030', '50000', 'Multiplier', '1.5', 'EMPLOYEE', '', 'Site Manager', 'Vietcombank', '0123456789', 'JOHN DOE'];
     
     const csvContent = "data:text/csv;charset=utf-8," 
         + headers.join(',') + '\n' 
