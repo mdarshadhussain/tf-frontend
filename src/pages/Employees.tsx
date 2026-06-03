@@ -8,6 +8,8 @@ import {
   XCircle,
   Eye,
   Phone,
+  Upload,
+  FileSpreadsheet
 } from 'lucide-react';
 
 import './Employees.css';
