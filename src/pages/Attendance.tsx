@@ -35,7 +35,7 @@ import { useAuth } from '../context/AuthContext';
 import Toast from '../components/Toast';
 import type { ToastType } from '../components/Toast';
 
-import { loadFaceApiModels, areModelsLoaded } from '../utils/aiModels';
+import { loadFaceApiModels, areModelsLoaded, detectBlinkLiveness } from '../utils/aiModels';
 
 // Simple sound feedback using Web Audio API
 function playSound(type: 'success' | 'error' | 'location' | 'facial' | 'biometric_success' | 'biometric_fail') {
@@ -764,6 +764,18 @@ const Attendance = () => {
     setScanStatus('scanning');
 
     try {
+      addToast("Blink your eyes to verify liveness...", "info");
+      if (videoRef.current) {
+        const isLive = await detectBlinkLiveness(videoRef.current, (msg) => console.log(msg), 15000);
+        if (!isLive) {
+          playSound('error');
+          addToast("Liveness check failed. Please blink your eyes to verify you are a real person.", 'error');
+          setIsScanning(false);
+          setScanStatus('idle');
+          return;
+        }
+      }
+
       const biometricProof = captureFrame();
       if (!biometricProof) throw new Error("Capture failed - check camera visibility");
 
@@ -837,6 +849,18 @@ const Attendance = () => {
     setIsScanning(true);
     setScanStatus('scanning');
     
+    addToast("Blink your eyes to verify liveness...", "info");
+    if (videoRef.current) {
+      const isLive = await detectBlinkLiveness(videoRef.current, (msg) => console.log(msg), 15000);
+      if (!isLive) {
+        playSound('error');
+        addToast("Liveness check failed. Please blink your eyes to verify you are a real person.", 'error');
+        setIsScanning(false);
+        setScanStatus('idle');
+        return;
+      }
+    }
+
     const biometricProof = captureFrame();
     if (!biometricProof) {
       addToast("Failed to capture image", 'error');

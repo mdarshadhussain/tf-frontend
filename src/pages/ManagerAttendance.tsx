@@ -12,7 +12,7 @@ import {
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import * as faceapi from 'face-api.js';
-import { loadFaceApiModels, areModelsLoaded } from '../utils/aiModels';
+import { loadFaceApiModels, areModelsLoaded, detectBlinkLiveness } from '../utils/aiModels';
 import { fetchEmployees, fetchAllLogs, submitManagerLog, fetchTodayLogs, createSecurityAlert, fetchSites, logManualAttendance } from '../api/api';
 import { useAuth } from '../context/AuthContext';
 import PremiumSelect from '../components/PremiumSelect';
@@ -424,6 +424,18 @@ const ManagerAttendance: React.FC = () => {
 
   const handleCaptureAndVerify = async () => {
     if (!selectedEmployee) return;
+
+    setStatusMessage("Blink to verify liveness...");
+    if (videoRef.current) {
+      const isLive = await detectBlinkLiveness(videoRef.current, setStatusMessage, 15000);
+      if (!isLive) {
+        playSound('error');
+        setStep('location_failed');
+        setErrorDetail("Liveness check failed. Please ask the employee to blink their eyes to verify they are a real person.");
+        stopCamera();
+        return;
+      }
+    }
 
     const capturedFrame = captureFrame();
     if (!capturedFrame) {

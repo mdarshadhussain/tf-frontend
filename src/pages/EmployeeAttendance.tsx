@@ -15,7 +15,7 @@ import {
 import * as faceapi from 'face-api.js';
 import { useAuth } from '../context/AuthContext';
 import { clockIn, clockOut, fetchTodayLogs, fetchAllLogs, createSecurityAlert, fetchEmployeeById } from '../api/api';
-import { loadFaceApiModels, areModelsLoaded } from '../utils/aiModels';
+import { loadFaceApiModels, areModelsLoaded, detectBlinkLiveness } from '../utils/aiModels';
 import './EmployeeAttendance.css';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
@@ -363,9 +363,23 @@ const EmployeeAttendance = () => {
       }
 
       playSound('facial'); // Play facial scanning sound cue
-      // Allow stabilization, then capture and process face
+      // Allow stabilization, then check liveness and process face
       setTimeout(async () => {
         try {
+          setStatusMessage("Blink your eyes to verify liveness...");
+          
+          if (videoRef.current) {
+            const isLive = await detectBlinkLiveness(videoRef.current, setStatusMessage, 15000);
+            if (!isLive) {
+              playSound('error');
+              setStep('failed');
+              setErrorDetail("Liveness check failed. Please blink your eyes to verify you are a real person.");
+              setIsProcessing(false);
+              stopCamera();
+              return;
+            }
+          }
+
           const biometricProof = captureFrame();
           if (!biometricProof) {
             throw new Error("Failed to capture image frame.");
