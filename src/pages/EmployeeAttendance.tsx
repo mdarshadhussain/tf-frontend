@@ -378,7 +378,7 @@ const EmployeeAttendance = () => {
           if (modelsLoaded && user?.avatar) {
             isMatch = false; // Must match successfully if avatar exists
             try {
-              const avatarUrl = user.avatar.startsWith('http') ? user.avatar : `${API_URL}${user.avatar}`;
+              const avatarUrl = getAbsoluteFileUrl(user.avatar, API_URL);
               let referenceImg;
               try {
                 referenceImg = await faceapi.fetchImage(avatarUrl);
