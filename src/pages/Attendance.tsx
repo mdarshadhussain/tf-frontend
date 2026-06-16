@@ -105,10 +105,8 @@ function playSound(type: 'success' | 'error' | 'location' | 'facial' | 'biometri
   }
 }
 
-import './Attendance.css';
+import { getAbsoluteFileUrl } from '../utils/url';
 import EmployeeAttendance from './EmployeeAttendance';
-
-
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
@@ -766,7 +764,7 @@ const Attendance = () => {
       const biometricProof = captureFrame();
       if (!biometricProof) throw new Error("Capture failed - check camera visibility");
 
-      const avatarUrl = user.avatar.startsWith('http') ? user.avatar : `${API_URL}${user.avatar}`;
+      const avatarUrl = getAbsoluteFileUrl(user.avatar, API_URL);
 
       // Create a timeout promise
       const timeoutPromise = new Promise((_, reject) => 
@@ -848,7 +846,7 @@ const Attendance = () => {
     playSound('facial'); // Play facial scanning sound cue
     if (modelsLoaded && user?.avatar) {
       try {
-        const avatarUrl = user.avatar.startsWith('http') ? user.avatar : `${API_URL}${user.avatar}`;
+        const avatarUrl = getAbsoluteFileUrl(user.avatar, API_URL);
         let referenceImg;
         try {
           referenceImg = await faceapi.fetchImage(avatarUrl);
@@ -1641,7 +1639,7 @@ const Attendance = () => {
                     <label style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-secondary)' }}>Verification Proof</label>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '12px', background: 'rgba(255,255,255,0.02)', padding: '12px', borderRadius: '12px', border: '1px solid var(--border)' }}>
                       <img 
-                        src={editingLog.biometricProof.startsWith('http') ? editingLog.biometricProof : `${API_URL}${editingLog.biometricProof}`} 
+                        src={getAbsoluteFileUrl(editingLog.biometricProof, API_URL)} 
                         alt="Verification Proof" 
                         style={{ width: '60px', height: '60px', borderRadius: '8px', objectFit: 'cover', border: '1px solid var(--border)' }} 
                       />
@@ -1788,7 +1786,7 @@ const Attendance = () => {
             <div className="profile-card-mini">
               <div className="avatar-wrapper">
                 <img 
-                  src={user?.avatar ? (user.avatar.startsWith('http') ? user.avatar : `${API_URL}${user.avatar}`) : "https://api.dicebear.com/7.x/avataaars/svg?seed=Admin"} 
+                  src={user?.avatar ? getAbsoluteFileUrl(user.avatar, API_URL) : "https://api.dicebear.com/7.x/avataaars/svg?seed=Admin"} 
                   alt="Profile" 
                   className="large-avatar" 
                 />
@@ -1983,12 +1981,12 @@ const Attendance = () => {
                         <td data-label={t('verification')}>
                           <div className="proof-stack-mini">
                             {log.biometricProof && (
-                              <button className="btn-proof-tiny in" title="View Check-in Identity Proof" onClick={() => setSelectedProof(log.biometricProof.startsWith('http') ? log.biometricProof : `${API_URL}${log.biometricProof}`)}>
+                              <button className="btn-proof-tiny in" title="View Check-in Identity Proof" onClick={() => setSelectedProof(getAbsoluteFileUrl(log.biometricProof, API_URL))}>
                                 <Camera size={12} /> PROOF
                               </button>
                             )}
                             {log.biometricProofOut && (
-                              <button className="btn-proof-tiny out" title="View Check-out Identity Proof" onClick={() => setSelectedProof(log.biometricProofOut.startsWith('http') ? log.biometricProofOut : `${API_URL}${log.biometricProofOut}`)}>
+                              <button className="btn-proof-tiny out" title="View Check-out Identity Proof" onClick={() => setSelectedProof(getAbsoluteFileUrl(log.biometricProofOut, API_URL))}>
                                 <Camera size={12} /> PROOF
                               </button>
                             )}
@@ -2100,12 +2098,12 @@ const Attendance = () => {
                       <div className="amc-footer">
                         <div className="amc-proofs">
                           {log.biometricProof && (
-                            <button className="amc-proof-btn" onClick={() => setSelectedProof(log.biometricProof.startsWith('http') ? log.biometricProof : `${API_URL}${log.biometricProof}`)}>
+                            <button className="amc-proof-btn" onClick={() => setSelectedProof(getAbsoluteFileUrl(log.biometricProof, API_URL))}>
                               <Camera size={14} /> IN
                             </button>
                           )}
                           {log.biometricProofOut && (
-                            <button className="amc-proof-btn" onClick={() => setSelectedProof(log.biometricProofOut.startsWith('http') ? log.biometricProofOut : `${API_URL}${log.biometricProofOut}`)}>
+                            <button className="amc-proof-btn" onClick={() => setSelectedProof(getAbsoluteFileUrl(log.biometricProofOut, API_URL))}>
                               <Camera size={14} /> OUT
                             </button>
                           )}

@@ -239,6 +239,8 @@ const StatCard = ({ icon, label, value, trend, color, description, trendLabel }:
   </motion.div>
 );
 
+import { getAbsoluteFileUrl } from '../utils/url';
+
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 const Dashboard = () => {
@@ -822,7 +824,7 @@ const Dashboard = () => {
   });
 
   const avatarSrc = user?.avatar 
-    ? (user.avatar.startsWith('http') ? user.avatar : `${API_URL}${user.avatar}`) 
+    ? getAbsoluteFileUrl(user.avatar, API_URL) 
     : `https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.firstName || 'User'}`;
 
   const formatTime = (timeStr: string) => {

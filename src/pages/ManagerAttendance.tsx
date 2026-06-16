@@ -16,7 +16,7 @@ import { loadFaceApiModels, areModelsLoaded } from '../utils/aiModels';
 import { fetchEmployees, fetchAllLogs, submitManagerLog, fetchTodayLogs, createSecurityAlert, fetchSites, logManualAttendance } from '../api/api';
 import { useAuth } from '../context/AuthContext';
 import PremiumSelect from '../components/PremiumSelect';
-import './ManagerAttendance.css';
+import { getAbsoluteFileUrl } from '../utils/url';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
@@ -236,9 +236,7 @@ const ManagerAttendance: React.FC = () => {
         }
 
         if (existingLog.biometricProof && existingLog.biometricProof !== 'MANAGER_LOG' && existingLog.biometricProof !== 'MANUAL') {
-          const fullImgUrl = existingLog.biometricProof.startsWith('http') 
-            ? existingLog.biometricProof 
-            : `${API_URL}${existingLog.biometricProof}`;
+          const fullImgUrl = getAbsoluteFileUrl(existingLog.biometricProof, API_URL);
           setManualCheckInPic(fullImgUrl);
         }
 
@@ -250,9 +248,7 @@ const ManagerAttendance: React.FC = () => {
         }
 
         if (existingLog.biometricProofOut) {
-          const fullImgUrl = existingLog.biometricProofOut.startsWith('http') 
-            ? existingLog.biometricProofOut 
-            : `${API_URL}${existingLog.biometricProofOut}`;
+          const fullImgUrl = getAbsoluteFileUrl(existingLog.biometricProofOut, API_URL);
           setManualCheckOutPic(fullImgUrl);
         }
       }
@@ -444,7 +440,7 @@ const ManagerAttendance: React.FC = () => {
       let isMatch = true; // Default to true if employee does not have an avatar to compare
       if (selectedEmployee.avatar && modelsLoaded) {
         try {
-          const avatarUrl = selectedEmployee.avatar.startsWith('http') ? selectedEmployee.avatar : `${API_URL}${selectedEmployee.avatar}`;
+          const avatarUrl = getAbsoluteFileUrl(selectedEmployee.avatar, API_URL);
           let referenceImg;
           try {
             referenceImg = await faceapi.fetchImage(avatarUrl);
@@ -1096,7 +1092,7 @@ const ManagerAttendance: React.FC = () => {
           <div className="compact-header-row">
             <div className="compact-profile">
               <img 
-                src={user?.avatar ? (user.avatar.startsWith('http') ? user.avatar : `${API_URL}${user.avatar}`) : "https://api.dicebear.com/7.x/avataaars/svg?seed=Admin"} 
+                src={user?.avatar ? getAbsoluteFileUrl(user.avatar, API_URL) : "https://api.dicebear.com/7.x/avataaars/svg?seed=Admin"} 
                 alt="Profile" 
                 className="compact-avatar" 
               />
