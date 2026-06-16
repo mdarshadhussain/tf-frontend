@@ -155,7 +155,11 @@ const Profile = () => {
               <div className="avatar-main">
                 {(fullProfile?.employee?.avatar || user?.avatar) ? (
                   <img 
-                    src={(fullProfile?.employee?.avatar || user?.avatar).startsWith('http') ? (fullProfile?.employee?.avatar || user?.avatar) : `${API_URL}${fullProfile?.employee?.avatar || user?.avatar}`} 
+                    src={
+                      (fullProfile?.employee?.avatar || user?.avatar).startsWith('http') || (fullProfile?.employee?.avatar || user?.avatar).startsWith('data:')
+                        ? (fullProfile?.employee?.avatar || user?.avatar) 
+                        : `${API_URL}${fullProfile?.employee?.avatar || user?.avatar}`
+                    } 
                     alt="Profile" 
                     onError={(e) => {
                       e.currentTarget.src = `https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.firstName || 'User'}`;
