@@ -16,6 +16,7 @@ import { loadFaceApiModels, areModelsLoaded } from '../utils/aiModels';
 import { fetchEmployees, fetchAllLogs, submitManagerLog, fetchTodayLogs, createSecurityAlert, fetchSites, logManualAttendance } from '../api/api';
 import { useAuth } from '../context/AuthContext';
 import PremiumSelect from '../components/PremiumSelect';
+import './ManagerAttendance.css';
 import { getAbsoluteFileUrl } from '../utils/url';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';

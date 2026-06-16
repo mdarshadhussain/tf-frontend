@@ -16,6 +16,7 @@ import * as faceapi from 'face-api.js';
 import { useAuth } from '../context/AuthContext';
 import { clockIn, clockOut, fetchTodayLogs, fetchAllLogs, createSecurityAlert, fetchEmployeeById } from '../api/api';
 import { loadFaceApiModels, areModelsLoaded } from '../utils/aiModels';
+import './EmployeeAttendance.css';
 import { getAbsoluteFileUrl } from '../utils/url';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';

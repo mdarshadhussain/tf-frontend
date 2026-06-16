@@ -34,6 +34,7 @@ import { fetchEmployeeFullProfile } from '../api/api';
 import DocumentModal from '../components/DocumentModal';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../context/AuthContext';
+import './EmployeeDetails.css';
 import { getAbsoluteFileUrl } from '../utils/url';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';

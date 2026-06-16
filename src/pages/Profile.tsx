@@ -19,6 +19,7 @@ import { useTranslation } from 'react-i18next';
 import { fetchEmployeeFullProfile } from '../api/api';
 import Toast from '../components/Toast';
 import type { ToastType } from '../components/Toast';
+import './Profile.css';
 import { getAbsoluteFileUrl } from '../utils/url';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';

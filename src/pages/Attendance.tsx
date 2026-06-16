@@ -105,6 +105,7 @@ function playSound(type: 'success' | 'error' | 'location' | 'facial' | 'biometri
   }
 }
 
+import './Attendance.css';
 import { getAbsoluteFileUrl } from '../utils/url';
 import EmployeeAttendance from './EmployeeAttendance';
 
