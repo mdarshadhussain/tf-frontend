@@ -589,8 +589,8 @@ const Attendance = () => {
       return;
     }
     try {
-      const fullIn = `${manualData.date}T${manualData.clockIn}:00`;
-      const fullOut = manualData.clockOut ? `${manualData.date}T${manualData.clockOut}:00` : null;
+      const fullIn = new Date(`${manualData.date}T${manualData.clockIn}`).toISOString();
+      const fullOut = manualData.clockOut ? new Date(`${manualData.date}T${manualData.clockOut}`).toISOString() : null;
       
       await logManualAttendance({
         ...manualData,
@@ -691,10 +691,9 @@ const Attendance = () => {
     }
 
     try {
-      const dObj = new Date(editingLog.date);
-      const dateStr = `${dObj.getFullYear()}-${(dObj.getMonth() + 1).toString().padStart(2, '0')}-${dObj.getDate().toString().padStart(2, '0')}`;
-      const fullIn = `${dateStr}T${editForm.clockIn}:00`;
-      const fullOut = editForm.clockOut ? `${dateStr}T${editForm.clockOut}:00` : null;
+      const dateStr = new Date(editingLog.date || editingLog.clockIn).toISOString().split('T')[0];
+      const fullIn = new Date(`${dateStr}T${editForm.clockIn}`).toISOString();
+      const fullOut = editForm.clockOut ? new Date(`${dateStr}T${editForm.clockOut}`).toISOString() : null;
 
       await updateAttendanceTimes(
         editingLog.id,

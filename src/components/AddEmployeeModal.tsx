@@ -168,9 +168,10 @@ const AddEmployeeModal = ({ isOpen, onClose, onAdd }: AddEmployeeModalProps) => 
                     <select 
                       value={formData.designation}
                       onChange={(e) => setFormData({...formData, designation: e.target.value})}
-                      required
+                      required={formData.role === 'EMPLOYEE'}
+                      disabled={formData.role !== 'EMPLOYEE'}
                     >
-                      <option value="" disabled>Select Designation</option>
+                      <option value="" disabled={formData.role === 'EMPLOYEE'}>Select Designation</option>
                       <option value="Supervisor">Supervisor</option>
                       <option value="Foreman">Foreman</option>
                       <option value="Experience Worker">Experience Worker</option>
@@ -192,7 +193,15 @@ const AddEmployeeModal = ({ isOpen, onClose, onAdd }: AddEmployeeModalProps) => 
                     {isAdmin ? (
                       <select 
                         value={formData.role}
-                        onChange={(e) => setFormData({...formData, role: e.target.value})}
+                        onChange={(e) => {
+                          const nextRole = e.target.value;
+                          setFormData(prev => ({
+                            ...prev,
+                            role: nextRole,
+                            ...(nextRole !== 'EMPLOYEE' ? { designation: '' } : {}),
+                            ...(nextRole === 'ADMIN' ? { siteId: '' } : {})
+                          }));
+                        }}
                       >
                         <option value="EMPLOYEE">Standard Employee</option>
                         <option value="MANAGER">Manager</option>
@@ -207,22 +216,24 @@ const AddEmployeeModal = ({ isOpen, onClose, onAdd }: AddEmployeeModalProps) => 
                 </div>
               </div>
 
-              <div className="form-group">
-                <label>Default Assignment (Site)</label>
-                <div className="input-with-icon">
-                  <MapPin size={16} />
-                  <select 
-                    required
-                    value={formData.siteId}
-                    onChange={(e) => setFormData({...formData, siteId: e.target.value})}
-                  >
-                    <option value="">Select a site...</option>
-                    {sites.map(site => (
-                      <option key={site.id} value={site.id}>{site.name}</option>
-                    ))}
-                  </select>
+              {formData.role !== 'ADMIN' && (
+                <div className="form-group">
+                  <label>Default Assignment (Site)</label>
+                  <div className="input-with-icon">
+                    <MapPin size={16} />
+                    <select 
+                      required={formData.role !== 'ADMIN'}
+                      value={formData.siteId}
+                      onChange={(e) => setFormData({...formData, siteId: e.target.value})}
+                    >
+                      <option value="">Select a site...</option>
+                      {sites.map(site => (
+                        <option key={site.id} value={site.id}>{site.name}</option>
+                      ))}
+                    </select>
+                  </div>
                 </div>
-              </div>
+              )}
 
               <div className="face-enrollment-box">
                 <Camera size={24} />

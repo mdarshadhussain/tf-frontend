@@ -610,8 +610,8 @@ const Payroll = () => {
     // Auto-use the employee's assigned siteId — no need for the admin to select it
     const employeeSiteId = selectedEmployeeRecord?.employee?.siteId || '';
     try {
-      const fullIn = `${manualData.date}T${manualData.clockIn}:00`;
-      const fullOut = `${manualData.date}T${manualData.clockOut}:00`;
+      const fullIn = new Date(`${manualData.date}T${manualData.clockIn}`).toISOString();
+      const fullOut = manualData.clockOut ? new Date(`${manualData.date}T${manualData.clockOut}`).toISOString() : null;
       
       await logManualAttendance({
         employeeId: selectedEmployeeId,

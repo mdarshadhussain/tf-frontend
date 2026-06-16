@@ -125,7 +125,7 @@ const AddEmployee = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!formData.avatar) {
+    if (formData.role !== 'ADMIN' && !formData.avatar) {
       alert(t('profilePicMandatory'));
       return;
     }
@@ -154,7 +154,7 @@ const AddEmployee = () => {
           updateUser({ ...user, ...updated });
         }
       } else {
-        if (!files.avatar) {
+        if (formData.role !== 'ADMIN' && !files.avatar) {
           throw new Error(t('profilePicMandatoryNew'));
         }
         await createEmployee(formDataToSend);
@@ -298,11 +298,11 @@ const AddEmployee = () => {
                   />
                 </div>
 
-                <div className="form-field required">
-                  <label>{t('phoneNumRequired')}</label>
+                <div className={`form-field ${formData.role !== 'ADMIN' ? 'required' : ''}`}>
+                  <label>{formData.role === 'ADMIN' ? (t('phoneNumber') || 'Phone Number') : t('phoneNumRequired')}</label>
                   <input 
                     type="tel" 
-                    required 
+                    required={formData.role !== 'ADMIN'}
                     value={formData.phone}
                     onChange={(e) => setFormData({...formData, phone: e.target.value})}
                     placeholder="+1 (555) 000-0000" 
@@ -321,52 +321,55 @@ const AddEmployee = () => {
             {/* Payroll & Project Card */}
             <div className="compact-section card-2">
               <h3 className="section-title-compact">{t('payrollProjectAssignment')}</h3>
-              <div className="form-row-grid grid-3">
-                <div className="form-field required">
-                  <label>{t('salaryPerHour')}</label>
-                  <div className="input-with-prefix-modern">
-                    <span className="prefix-addon">₫</span>
-                    <input 
-                      type="number" 
-                      step="1000"
-                      min="0"
-                      required
-                      value={formData.hourlyRate || ''}
-                      onChange={(e) => setFormData({...formData, hourlyRate: Math.max(0, e.target.value ? parseFloat(e.target.value) : 0)})}
-                      placeholder="50,000" 
-                    />
-                  </div>
-                </div>
-
-                <div className="form-field required" style={{ gridColumn: 'span 2' }}>
-                  <label>{t('overtimeProtocol')}</label>
-                  <div className="overtime-protocol-group-modern">
-                    <PremiumSelect 
-                      required
-                      value={formData.overtimeType}
-                      onChange={(val: string) => setFormData({...formData, overtimeType: val})}
-                      options={[
-                        { label: t('multiplier'), value: 'MULTIPLIER' },
-                        { label: t('fixedAmount'), value: 'FIXED' }
-                      ]}
-                    />
+              
+              {formData.role !== 'ADMIN' && (
+                <div className="form-row-grid grid-3" style={{ marginBottom: '12px' }}>
+                  <div className="form-field required">
+                    <label>{t('salaryPerHour')}</label>
                     <div className="input-with-prefix-modern">
-                      <span className="prefix-addon">{formData.overtimeType === 'MULTIPLIER' ? <TrendingUp size={14} /> : '₫'}</span>
+                      <span className="prefix-addon">₫</span>
                       <input 
                         type="number" 
-                        step="0.01"
+                        step="1000"
                         min="0"
                         required
-                        value={formData.overtimeValue || ''}
-                        onChange={(e) => setFormData({...formData, overtimeValue: Math.max(0, e.target.value ? parseFloat(e.target.value) : 0)})}
-                        placeholder={formData.overtimeType === 'MULTIPLIER' ? '1.5' : '100,000'} 
+                        value={formData.hourlyRate || ''}
+                        onChange={(e) => setFormData({...formData, hourlyRate: Math.max(0, e.target.value ? parseFloat(e.target.value) : 0)})}
+                        placeholder="50,000" 
                       />
                     </div>
                   </div>
-                </div>
-              </div>
 
-              <div className={`form-row-grid ${formData.role === 'EMPLOYEE' ? 'grid-3' : (formData.role === 'MANAGER' ? 'grid-2' : '')}`} style={{ marginTop: '12px' }}>
+                  <div className="form-field required" style={{ gridColumn: 'span 2' }}>
+                    <label>{t('overtimeProtocol')}</label>
+                    <div className="overtime-protocol-group-modern">
+                      <PremiumSelect 
+                        required
+                        value={formData.overtimeType}
+                        onChange={(val: string) => setFormData({...formData, overtimeType: val})}
+                        options={[
+                          { label: t('multiplier'), value: 'MULTIPLIER' },
+                          { label: t('fixedAmount'), value: 'FIXED' }
+                        ]}
+                      />
+                      <div className="input-with-prefix-modern">
+                        <span className="prefix-addon">{formData.overtimeType === 'MULTIPLIER' ? <TrendingUp size={14} /> : '₫'}</span>
+                        <input 
+                          type="number" 
+                          step="0.01"
+                          min="0"
+                          required
+                          value={formData.overtimeValue || ''}
+                          onChange={(e) => setFormData({...formData, overtimeValue: Math.max(0, e.target.value ? parseFloat(e.target.value) : 0)})}
+                          placeholder={formData.overtimeType === 'MULTIPLIER' ? '1.5' : '100,000'} 
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              <div className={`form-row-grid ${formData.role === 'EMPLOYEE' ? 'grid-3' : (formData.role === 'MANAGER' ? 'grid-2' : '')}`} style={{ marginTop: formData.role !== 'ADMIN' ? '12px' : '0px' }}>
                 <div className="form-field required">
                   <label>{t('accessLevel')}</label>
                   <PremiumSelect 
@@ -428,108 +431,112 @@ const AddEmployee = () => {
                     />
                   </div>
                 )}
-            </div>
-          </div>
-
-          {/* Financial Card */}
-          <div className="compact-section card-4">
-              <h3 className="section-title-compact">{t('bankAccounts')}</h3>
-              <div className="form-row-grid grid-2">
-                <div className="form-field">
-                  <label>{t('bankNameLabel')}</label>
-                  <input 
-                    type="text" 
-                    value={formData.bankName}
-                    onChange={(e) => setFormData({...formData, bankName: e.target.value})}
-                    placeholder="e.g. Vietcombank" 
-                  />
-                </div>
-
-                <div className="form-field">
-                  <label>{t('accountNumberLabel')}</label>
-                  <input 
-                    type="text" 
-                    value={formData.accountNumber}
-                    onChange={(e) => setFormData({...formData, accountNumber: e.target.value})}
-                    placeholder="e.g. 0123456789" 
-                  />
-                </div>
-              </div>
-
-              <div style={{ marginTop: '12px' }}>
-                <div className="form-field">
-                  <label>{t('accountHolderNameLabel')}</label>
-                  <input 
-                    type="text" 
-                    value={formData.accountHolderName}
-                    onChange={(e) => setFormData({...formData, accountHolderName: e.target.value})}
-                    placeholder="e.g. JOHN DOE" 
-                  />
-                </div>
               </div>
             </div>
 
-            {/* Official Identification Card */}
-            <div className="compact-section card-3">
-              <h3 className="section-title-compact">{t('identificationDocs')}</h3>
-              <div className="form-row-grid grid-3">
-                <div className="form-field">
-                  <label>{t('passportIdNumber')}</label>
-                  <input 
-                    type="text" 
-                    value={formData.passportNumber}
-                    onChange={(e) => setFormData({...formData, passportNumber: e.target.value})}
-                    placeholder="e.g. A12345678" 
-                  />
-                </div>
-
-                <div className="form-field">
-                  <label>{t('passportIssueLabel')}</label>
-                  <input 
-                    type="date" 
-                    value={formData.passportIssue}
-                    onChange={(e) => setFormData({...formData, passportIssue: e.target.value})}
-                  />
-                </div>
-
-                <div className="form-field">
-                  <label>{t('passportExpiryLabel')}</label>
-                  <input 
-                    type="date" 
-                    value={formData.passportExpiry}
-                    onChange={(e) => setFormData({...formData, passportExpiry: e.target.value})}
-                  />
-                </div>
-              </div>
-
-              <div className="form-row-grid grid-2" style={{ marginTop: '12px' }}>
-                <div className="form-field">
-                  <label>{t('resumeCv')}</label>
-                  <div className={`file-upload-zone-modern ${files.cv || formData.cvPath ? 'uploaded' : ''}`}>
-                    <Upload size={16} className="upload-icon" />
-                    <div className="upload-text">
-                      <span className="file-name-display">
-                        {files.cv ? files.cv.name : (formData.cvPath ? 'Resume_CV_Uploaded.pdf' : t('uploadResume'))}
-                      </span>
+            {formData.role !== 'ADMIN' && (
+              <>
+                {/* Financial Card */}
+                <div className="compact-section card-4">
+                  <h3 className="section-title-compact">{t('bankAccounts')}</h3>
+                  <div className="form-row-grid grid-2">
+                    <div className="form-field">
+                      <label>{t('bankNameLabel')}</label>
+                      <input 
+                        type="text" 
+                        value={formData.bankName}
+                        onChange={(e) => setFormData({...formData, bankName: e.target.value})}
+                        placeholder="e.g. Vietcombank" 
+                      />
                     </div>
-                    <input type="file" accept=".pdf,.doc,.docx" onChange={(e) => handleFileChange(e, 'cv')} />
+
+                    <div className="form-field">
+                      <label>{t('accountNumberLabel')}</label>
+                      <input 
+                        type="text" 
+                        value={formData.accountNumber}
+                        onChange={(e) => setFormData({...formData, accountNumber: e.target.value})}
+                        placeholder="e.g. 0123456789" 
+                      />
+                    </div>
+                  </div>
+
+                  <div style={{ marginTop: '12px' }}>
+                    <div className="form-field">
+                      <label>{t('accountHolderNameLabel')}</label>
+                      <input 
+                        type="text" 
+                        value={formData.accountHolderName}
+                        onChange={(e) => setFormData({...formData, accountHolderName: e.target.value})}
+                        placeholder="e.g. JOHN DOE" 
+                      />
+                    </div>
                   </div>
                 </div>
 
-                <div className="form-field">
-                  <label>{t('idProofDoc')}</label>
-                  <div className={`file-upload-zone-modern ${files.idDoc || formData.idDocPath ? 'uploaded' : ''}`}>
-                    <Upload size={16} className="upload-icon" />
-                    <div className="upload-text">
-                      <span className="file-name-display">
-                        {files.idDoc ? files.idDoc.name : (formData.idDocPath ? 'ID_Proof_Uploaded.jpg' : t('uploadIdProof'))}
-                      </span>
+                {/* Official Identification Card */}
+                <div className="compact-section card-3">
+                  <h3 className="section-title-compact">{t('identificationDocs')}</h3>
+                  <div className="form-row-grid grid-3">
+                    <div className="form-field">
+                      <label>{t('passportIdNumber')}</label>
+                      <input 
+                        type="text" 
+                        value={formData.passportNumber}
+                        onChange={(e) => setFormData({...formData, passportNumber: e.target.value})}
+                        placeholder="e.g. A12345678" 
+                      />
                     </div>
-                    <input type="file" accept="image/*,.pdf" onChange={(e) => handleFileChange(e, 'idDoc')} />
+
+                    <div className="form-field">
+                      <label>{t('passportIssueLabel')}</label>
+                      <input 
+                        type="date" 
+                        value={formData.passportIssue}
+                        onChange={(e) => setFormData({...formData, passportIssue: e.target.value})}
+                      />
+                    </div>
+
+                    <div className="form-field">
+                      <label>{t('passportExpiryLabel')}</label>
+                      <input 
+                        type="date" 
+                        value={formData.passportExpiry}
+                        onChange={(e) => setFormData({...formData, passportExpiry: e.target.value})}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="form-row-grid grid-2" style={{ marginTop: '12px' }}>
+                    <div className="form-field">
+                      <label>{t('resumeCv')}</label>
+                      <div className={`file-upload-zone-modern ${files.cv || formData.cvPath ? 'uploaded' : ''}`}>
+                        <Upload size={16} className="upload-icon" />
+                        <div className="upload-text">
+                          <span className="file-name-display">
+                            {files.cv ? files.cv.name : (formData.cvPath ? 'Resume_CV_Uploaded.pdf' : t('uploadResume'))}
+                          </span>
+                        </div>
+                        <input type="file" accept=".pdf,.doc,.docx" onChange={(e) => handleFileChange(e, 'cv')} />
+                      </div>
+                    </div>
+
+                    <div className="form-field">
+                      <label>{t('idProofDoc')}</label>
+                      <div className={`file-upload-zone-modern ${files.idDoc || formData.idDocPath ? 'uploaded' : ''}`}>
+                        <Upload size={16} className="upload-icon" />
+                        <div className="upload-text">
+                          <span className="file-name-display">
+                            {files.idDoc ? files.idDoc.name : (formData.idDocPath ? 'ID_Proof_Uploaded.jpg' : t('uploadIdProof'))}
+                          </span>
+                        </div>
+                        <input type="file" accept="image/*,.pdf" onChange={(e) => handleFileChange(e, 'idDoc')} />
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </div>
+              </>
+            )}
         </div>
       </form>
     </motion.div>

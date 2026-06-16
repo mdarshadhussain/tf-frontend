@@ -305,6 +305,19 @@ const Employees = () => {
                 <tr key={emp.id}>
                   <td data-label={t('employeeName')}>
                     <div className="emp-identity">
+                      <div className="avatar-small" style={{ marginRight: '8px' }}>
+                        {emp.avatar ? (
+                          <img 
+                            src={emp.avatar.startsWith('http') ? emp.avatar : `${API_URL}${emp.avatar}`} 
+                            alt="Avatar" 
+                            onError={(e) => { 
+                              e.currentTarget.src = `https://api.dicebear.com/7.x/avataaars/svg?seed=${emp.firstName || 'User'}`; 
+                            }} 
+                          />
+                        ) : (
+                          emp.firstName.charAt(0)
+                        )}
+                      </div>
                       <div className="name-stack">
                         <span className="full-name">{emp.firstName} {emp.lastName}</span>
                         <span className="designation">{getDesignationLabel(emp.designation)}</span>

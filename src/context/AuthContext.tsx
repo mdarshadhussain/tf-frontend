@@ -40,10 +40,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     // Check for saved session on load
     const savedToken = localStorage.getItem('tf_token');
     const savedUser = localStorage.getItem('tf_user');
+    const loginTime = localStorage.getItem('tf_login_time');
 
     if (savedToken && savedUser) {
-      setToken(savedToken);
-      setUser(JSON.parse(savedUser));
+      const isExpired = loginTime ? (Date.now() - parseInt(loginTime, 10)) > 12 * 60 * 60 * 1000 : true;
+      if (isExpired) {
+        localStorage.removeItem('tf_token');
+        localStorage.removeItem('tf_user');
+        localStorage.removeItem('tf_login_time');
+      } else {
+        setToken(savedToken);
+        setUser(JSON.parse(savedUser));
+      }
     }
     setLoading(false);
   }, []);
@@ -53,6 +61,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setToken(newToken);
     localStorage.setItem('tf_token', newToken);
     localStorage.setItem('tf_user', JSON.stringify(userData));
+    localStorage.setItem('tf_login_time', Date.now().toString());
   };
 
   const logout = () => {
@@ -60,6 +69,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setToken(null);
     localStorage.removeItem('tf_token');
     localStorage.removeItem('tf_user');
+    localStorage.removeItem('tf_login_time');
   };
 
   const updateUser = (userData: User) => {
