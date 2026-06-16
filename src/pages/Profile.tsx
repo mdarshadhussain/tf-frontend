@@ -19,7 +19,7 @@ import { useTranslation } from 'react-i18next';
 import { fetchEmployeeFullProfile } from '../api/api';
 import Toast from '../components/Toast';
 import type { ToastType } from '../components/Toast';
-import './Profile.css';
+import { getAbsoluteFileUrl } from '../utils/url';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
@@ -155,11 +155,7 @@ const Profile = () => {
               <div className="avatar-main">
                 {(fullProfile?.employee?.avatar || user?.avatar) ? (
                   <img 
-                    src={
-                      (fullProfile?.employee?.avatar || user?.avatar).startsWith('http') || (fullProfile?.employee?.avatar || user?.avatar).startsWith('data:')
-                        ? (fullProfile?.employee?.avatar || user?.avatar) 
-                        : `${API_URL}${fullProfile?.employee?.avatar || user?.avatar}`
-                    } 
+                    src={getAbsoluteFileUrl(fullProfile?.employee?.avatar || user?.avatar, API_URL)} 
                     alt="Profile" 
                     onError={(e) => {
                       e.currentTarget.src = `https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.firstName || 'User'}`;

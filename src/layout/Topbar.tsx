@@ -8,8 +8,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import './Topbar.css';
 
-import { useAuth } from '../context/AuthContext';
-import { useTheme } from '../context/ThemeContext';
+import { getAbsoluteFileUrl } from '../utils/url';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
@@ -101,9 +100,7 @@ const Topbar = ({ onMenuClick, hideMenuBtn = false }: { onMenuClick?: () => void
             <img 
               src={
                 user?.avatar
-                  ? (user.avatar.startsWith('http') || user.avatar.startsWith('data:')
-                      ? user.avatar
-                      : `${API_URL}${user.avatar.startsWith('/') ? user.avatar : `/${user.avatar}`}`)
+                  ? getAbsoluteFileUrl(user.avatar, API_URL)
                   : `https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.firstName || 'User'}`
               }
               alt="User" 
