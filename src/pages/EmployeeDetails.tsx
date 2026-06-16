@@ -32,6 +32,7 @@ import { motion } from 'framer-motion';
 
 import { fetchEmployeeFullProfile } from '../api/api';
 import DocumentModal from '../components/DocumentModal';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../context/AuthContext';
 import { getAbsoluteFileUrl } from '../utils/url';
 

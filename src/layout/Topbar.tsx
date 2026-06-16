@@ -8,6 +8,8 @@ import {
 import { useTranslation } from 'react-i18next';
 import './Topbar.css';
 
+import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
 import { getAbsoluteFileUrl } from '../utils/url';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
