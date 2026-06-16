@@ -37,6 +37,8 @@ import type { ToastType } from '../components/Toast';
 import PayslipModal from '../components/PayslipModal';
 import { Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import PremiumSelect from '../components/PremiumSelect';
+import './Payroll.css';
+import './PayrollEmployee.css';
 import { getAbsoluteFileUrl } from '../utils/url';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
