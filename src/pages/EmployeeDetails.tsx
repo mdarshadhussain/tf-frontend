@@ -378,8 +378,8 @@ const EmployeeDetails = () => {
                     <div className="proof-node-premium">
                       <span className="proof-label">{t('checkin')}</span>
                       {log.biometricProof ? (
-                        <div className="proof-img-container" onClick={() => window.open(log.biometricProof.startsWith('http') ? log.biometricProof : `${API_URL}${log.biometricProof}`, '_blank')}>
-                          <img src={log.biometricProof.startsWith('http') ? log.biometricProof : `${API_URL}${log.biometricProof}`} alt="Check-in Proof" />
+                        <div className="proof-img-container" onClick={() => window.open(getAbsoluteFileUrl(log.biometricProof, API_URL), '_blank')}>
+                          <img src={getAbsoluteFileUrl(log.biometricProof, API_URL)} alt="Check-in Proof" />
                           <div className="proof-overlay"><ExternalLink size={12} /></div>
                         </div>
                       ) : (
@@ -390,8 +390,8 @@ const EmployeeDetails = () => {
                     <div className="proof-node-premium">
                       <span className="proof-label">{t('checkout')}</span>
                       {log.biometricProofOut ? (
-                        <div className="proof-img-container" onClick={() => window.open(log.biometricProofOut.startsWith('http') ? log.biometricProofOut : `${API_URL}${log.biometricProofOut}`, '_blank')}>
-                          <img src={log.biometricProofOut.startsWith('http') ? log.biometricProofOut : `${API_URL}${log.biometricProofOut}`} alt="Check-out Proof" />
+                        <div className="proof-img-container" onClick={() => window.open(getAbsoluteFileUrl(log.biometricProofOut, API_URL), '_blank')}>
+                          <img src={getAbsoluteFileUrl(log.biometricProofOut, API_URL)} alt="Check-out Proof" />
                           <div className="proof-overlay"><ExternalLink size={12} /></div>
                         </div>
                       ) : (

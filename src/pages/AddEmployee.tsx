@@ -20,6 +20,8 @@ import PremiumSelect from '../components/PremiumSelect';
 import './AddEmployee.css';
 import { useTranslation } from 'react-i18next';
 
+import { getAbsoluteFileUrl } from '../utils/url';
+
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 const AddEmployee = () => {
@@ -82,7 +84,7 @@ const AddEmployee = () => {
             designation: emp.designation || '',
             role: emp.role || 'EMPLOYEE',
             siteId: emp.siteId || '',
-            avatar: emp.avatar ? (emp.avatar.startsWith('http') ? emp.avatar : `${API_URL}${emp.avatar}`) : null,
+            avatar: emp.avatar ? getAbsoluteFileUrl(emp.avatar, API_URL) : null,
             hourlyRate: emp.hourlyRate || 0.0,
             overtimeType: emp.overtimeType || 'MULTIPLIER',
             overtimeValue: emp.overtimeValue || 1.5,

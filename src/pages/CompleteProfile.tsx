@@ -20,6 +20,8 @@ import { fetchEmployeeFullProfile, updateEmployee, enrollBiometric } from '../ap
 import './CompleteProfile.css';
 import { useTranslation } from 'react-i18next';
 
+import { getAbsoluteFileUrl } from '../utils/url';
+
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 const CompleteProfile = () => {
@@ -77,7 +79,7 @@ const CompleteProfile = () => {
           passportExpiry: employee.passportExpiry ? new Date(employee.passportExpiry).toISOString().split('T')[0] : '',
           passportIssue: employee.passportIssue ? new Date(employee.passportIssue).toISOString().split('T')[0] : '',
           dob: employee.dob ? new Date(employee.dob).toISOString().split('T')[0] : '',
-          avatar: employee.avatar ? (employee.avatar.startsWith('http') ? employee.avatar : `${API_URL}${employee.avatar}`) : null,
+          avatar: employee.avatar ? getAbsoluteFileUrl(employee.avatar, API_URL) : null,
           cvPath: employee.cvPath ? `${API_URL}${employee.cvPath}` : null,
           idDocPath: employee.idDocPath ? `${API_URL}${employee.idDocPath}` : null
         });
