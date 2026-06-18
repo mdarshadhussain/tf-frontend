@@ -330,7 +330,7 @@ const AddEmployee = () => {
                       <span className="prefix-addon">₫</span>
                       <input 
                         type="number" 
-                        step="1000"
+                        step="1"
                         min="0"
                         required
                         value={formData.hourlyRate || ''}
