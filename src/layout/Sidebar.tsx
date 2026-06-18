@@ -110,7 +110,7 @@ const Sidebar = ({ onClose, collapsed, onToggleCollapse }: SidebarProps) => {
     };
 
     loadPulseData();
-    const interval = setInterval(loadPulseData, 30000); // Sync every 30s
+    const interval = setInterval(loadPulseData, 5000); // Sync every 5s
     return () => clearInterval(interval);
   }, [collapsed, user]);
 
