@@ -214,22 +214,27 @@ const StatCard = ({ icon, label, value, trend, color, description, trendLabel }:
     className="watt-card stat-card"
   >
     <div className="stat-card-top">
-      <span className="stat-label">{label}</span>
       <div className="stat-icon-box" style={{ backgroundColor: `${color}15`, color: color }}>
         {icon}
       </div>
+      {trend !== undefined && (
+        <div className="stat-trend-badge" style={{ backgroundColor: trend > 0 ? '#10B98115' : '#EF444415', color: trend > 0 ? '#10B981' : '#EF4444' }}>
+          <TrendingUp size={12} style={{ transform: trend > 0 ? 'none' : 'rotate(180deg)' }} />
+          <span>{Math.abs(trend)}%</span>
+        </div>
+      )}
+      {trendLabel && (
+        <div className="stat-trend-label" style={{ display: 'inline-block' }}>
+          {trendLabel}
+        </div>
+      )}
     </div>
     <div className="stat-card-content">
+      <span className="stat-label">{label}</span>
       <div className="stat-value-group">
         <h2 className="stat-value">{value}</h2>
         {description && <span className="stat-unit">{description}</span>}
       </div>
-      {trendLabel && (
-        <span className="stat-trend-label">{trendLabel}</span>
-      )}
-      {trend !== undefined && (
-        <span className="stat-trend-label">{trend > 0 ? '+' : ''}{trend}% Completed</span>
-      )}
     </div>
   </motion.div>
 );

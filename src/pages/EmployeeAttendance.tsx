@@ -526,7 +526,74 @@ const EmployeeAttendance = () => {
         } else {
           status = dayLogs.some(l => l.status === 'APPROVED' || l.status === 'PRESENT') ? 'approved' : 'pending';
         }
-        hours = dayLogs.reduce((acc, l) => l.clockIn && l.clockOut ? acc + (new Date(l.clockOut).getTime() - new Date(l.clockIn).getTime()) / 3600000 : acc, 0);
+        hours = dayLogs.reduce((acc, l) => {
+          if (!l.clockIn || !l.clockOut) return acc;
+          const site = l.site;
+          const workingStartTime = site?.workingStartTime || '07:00';
+          const lunchStartTime = site?.lunchStartTime || '12:00';
+          const lunchEndTime = site?.lunchEndTime || '13:00';
+          
+          const clockInTime = new Date(l.clockIn);
+          const clockOutTime = new Date(l.clockOut);
+          
+          // Adjust for Vietnam time GMT+7
+          const localClockIn = new Date(clockInTime.getTime() + 7 * 60 * 60 * 1000);
+          const localClockOut = new Date(clockOutTime.getTime() + 7 * 60 * 60 * 1000);
+          
+          let start = new Date(localClockIn);
+          if (workingStartTime) {
+            const expectedStart = new Date(localClockIn);
+            const [startHH, startMM] = workingStartTime.split(':').map(Number);
+            expectedStart.setUTCHours(startHH, startMM, 0, 0);
+            
+            if (localClockIn > expectedStart) {
+              const minsLate = (localClockIn.getTime() - expectedStart.getTime()) / (1000 * 60);
+              const blockNumber = Math.floor(minsLate / 30);
+              const blockStartMs = expectedStart.getTime() + blockNumber * 30 * 60 * 1000;
+              const offset = minsLate - blockNumber * 30;
+              if (offset <= 10) {
+                start = new Date(blockStartMs);
+              } else {
+                start = new Date(blockStartMs + 30 * 60 * 1000);
+              }
+            } else {
+              start = expectedStart;
+            }
+          }
+          
+          let durationMs = localClockOut.getTime() - start.getTime();
+          
+          if (l.breaks && l.breaks.length > 0) {
+            l.breaks.forEach((b: any) => {
+              if (b.startTime && b.endTime) {
+                durationMs -= (new Date(b.endTime).getTime() - new Date(b.startTime).getTime());
+              }
+            });
+          }
+          
+          if (start && localClockOut) {
+            const startOfDay = new Date(start);
+            startOfDay.setUTCHours(0, 0, 0, 0);
+            const [lS_HH, lS_MM] = lunchStartTime.split(":").map(Number);
+            const [lE_HH, lE_MM] = lunchEndTime.split(":").map(Number);
+            
+            const lunchStart = new Date(startOfDay);
+            lunchStart.setUTCHours(lS_HH, lS_MM, 0, 0);
+            
+            const lunchEnd = new Date(startOfDay);
+            lunchEnd.setUTCHours(lE_HH, lE_MM, 0, 0);
+            
+            const overlapStart = new Date(Math.max(start.getTime(), lunchStart.getTime()));
+            const overlapEnd = new Date(Math.min(localClockOut.getTime(), lunchEnd.getTime()));
+            const overlapMs = Math.max(0, overlapEnd.getTime() - overlapStart.getTime());
+            
+            durationMs -= overlapMs;
+          }
+          
+          const durationMins = Math.max(0, durationMs / (1000 * 60));
+          const roundedMins = Math.floor(durationMins / 30) * 30;
+          return acc + (roundedMins / 60);
+        }, 0);
       } else if (isPast && dateObj.getDay() !== 0) status = 'absent';
       
       cells.push(
@@ -547,12 +614,12 @@ const EmployeeAttendance = () => {
   const now = new Date();
   const currentHour = now.getHours();
   
-  // User cannot check in after 5:00 PM (17:00)
-  const isCheckInDisabled = isClockedIn || currentHour >= 17;
+  // User cannot check in after 7:00 PM (19:00)
+  const isCheckInDisabled = isClockedIn || currentHour >= 19;
   
-  // User cannot clock out after 22:59, OR if it is >= 5 PM and they clocked in >= 5 PM
+  // User cannot clock out after 22:59, OR if it is >= 7 PM and they clocked in >= 7 PM
   const clockInDate = isClockedIn && logs[0]?.clockIn ? new Date(logs[0].clockIn) : null;
-  const isCheckOutDisabled = !isClockedIn || currentHour >= 23 || (currentHour >= 17 && clockInDate !== null && clockInDate.getHours() >= 17);
+  const isCheckOutDisabled = !isClockedIn || currentHour >= 23 || (currentHour >= 19 && clockInDate !== null && clockInDate.getHours() >= 19);
 
   if (isLoading) return <div className="dashboard-loading"><div className="loading-spinner-watt"></div><span>{t('processing')}</span></div>;
 

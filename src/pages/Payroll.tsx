@@ -28,7 +28,8 @@ import {
   generateMonthlyPayslip,
   finalizeMonthlyPayslip,
   payMonthlyPayslip,
-  fetchEmployeePayslips
+  fetchEmployeePayslips,
+  fetchHolidays
 } from '../api/api';
 import { exportToCSV } from '../utils/export';
 import { useAuth } from '../context/AuthContext';
@@ -147,7 +148,77 @@ const getAdjustedClockIn = (clockInStr: string, workingStartTimeStr: string) => 
   }
 };
 
-const calculatePayrollForLogs = (logs: any[], employee: any, sites: any[] = []) => {
+const calculateAdjustedDuration = (
+  clockInStr: string, 
+  clockOutStr: string, 
+  breaks: any[] = [], 
+  workingStartTime?: string | null,
+  lunchStartTime?: string | null,
+  lunchEndTime?: string | null
+) => {
+  if (!clockInStr || !clockOutStr) return 0;
+  const clockIn = new Date(clockInStr);
+  const clockOut = new Date(clockOutStr);
+  if (isNaN(clockIn.getTime()) || isNaN(clockOut.getTime())) return 0;
+
+  // Shift to Vietnam timezone (GMT+7)
+  const localClockIn = new Date(clockIn.getTime() + 7 * 60 * 60 * 1000);
+  const localClockOut = new Date(clockOut.getTime() + 7 * 60 * 60 * 1000);
+
+  let start = new Date(localClockIn);
+  if (workingStartTime) {
+    const expectedStart = new Date(localClockIn);
+    const [startHH, startMM] = workingStartTime.split(':').map(Number);
+    expectedStart.setUTCHours(startHH, startMM, 0, 0);
+
+    if (localClockIn > expectedStart) {
+      const minsLate = (localClockIn.getTime() - expectedStart.getTime()) / (1000 * 60);
+      const blockNumber = Math.floor(minsLate / 30);
+      const blockStartMs = expectedStart.getTime() + blockNumber * 30 * 60 * 1000;
+      const offset = minsLate - blockNumber * 30;
+      if (offset <= 10) {
+        start = new Date(blockStartMs);
+      } else {
+        start = new Date(blockStartMs + 30 * 60 * 1000);
+      }
+    } else {
+      start = expectedStart;
+    }
+  }
+
+  let durationMs = localClockOut.getTime() - start.getTime();
+  if (breaks && breaks.length > 0) {
+    breaks.forEach(b => {
+      if (b.startTime && b.endTime) {
+        durationMs -= (new Date(b.endTime).getTime() - new Date(b.startTime).getTime());
+      }
+    });
+  }
+
+  if (start && localClockOut) {
+    const startOfDay = new Date(start);
+    startOfDay.setUTCHours(0, 0, 0, 0);
+    const [lS_HH, lS_MM] = (lunchStartTime || "12:00").split(":").map(Number);
+    const [lE_HH, lE_MM] = (lunchEndTime || "13:00").split(":").map(Number);
+    
+    const lunchStart = new Date(startOfDay);
+    lunchStart.setUTCHours(lS_HH, lS_MM, 0, 0);
+    
+    const lunchEnd = new Date(startOfDay);
+    lunchEnd.setUTCHours(lE_HH, lE_MM, 0, 0);
+
+    const overlapStart = new Date(Math.max(start.getTime(), lunchStart.getTime()));
+    const overlapEnd = new Date(Math.min(localClockOut.getTime(), lunchEnd.getTime()));
+    const overlapMs = Math.max(0, overlapEnd.getTime() - overlapStart.getTime());
+    
+    durationMs -= overlapMs;
+  }
+
+  const durationMins = Math.max(0, durationMs / (1000 * 60));
+  return Math.floor(durationMins / 30) * 30;
+};
+
+const calculatePayrollForLogs = (logs: any[], employee: any, sites: any[] = [], holidays: any[] = []) => {
   let regMins = 0;
   let otMins = 0;
   const rate = employee?.hourlyRate || 25;
@@ -159,21 +230,23 @@ const calculatePayrollForLogs = (logs: any[], employee: any, sites: any[] = []) 
     const logSite = sites.find((s: any) => s.id === siteId);
     const workingStartTime = logSite?.workingStartTime || '07:00';
     
-    const adjustedInTime = getAdjustedClockIn(log.clockIn, workingStartTime);
-    const outTime = new Date(log.clockOut).getTime();
-    let diffMins = Math.round((outTime - adjustedInTime) / 60000);
+    const d = calculateAdjustedDuration(log.clockIn, log.clockOut, log.breaks, workingStartTime, logSite?.lunchStartTime, logSite?.lunchEndTime);
 
-    if (log.breaks && Array.isArray(log.breaks)) {
-      log.breaks.forEach((b: any) => {
-        if (b.endTime) {
-          const bDiff = Math.round((new Date(b.endTime).getTime() - new Date(b.startTime).getTime()) / 60000);
-          diffMins -= bDiff;
-        }
-      });
+    const logDate = new Date(log.date || log.clockIn);
+    const isSunday = logDate.getDay() === 0;
+    const isHoliday = holidays.some(h => {
+      const hDate = new Date(h.date);
+      return hDate.getFullYear() === logDate.getFullYear() &&
+             hDate.getMonth() === logDate.getMonth() &&
+             hDate.getDate() === logDate.getDate();
+    });
+
+    if (isSunday || isHoliday) {
+      otMins += d;
+    } else {
+      regMins += Math.min(480, d);
+      otMins += Math.max(0, d - 480);
     }
-
-    regMins += Math.min(480, diffMins);
-    otMins += Math.max(0, diffMins - 480);
   });
 
   const rh = regMins / 60;
@@ -207,25 +280,12 @@ const formatDateDDMMYYYY = (date: Date) => {
 };
 
 
-const getLogHoursAndOvertime = (log: any, workingStartTimeStr: string = '07:00') => {
+const getLogHoursAndOvertime = (log: any, workingStartTimeStr: string = '07:00', lunchStartStr?: string, lunchEndStr?: string) => {
   if (!log.clockIn || !log.clockOut) return { totalHours: 0, overtimeHours: 0 };
-  const adjustedInTime = getAdjustedClockIn(log.clockIn, workingStartTimeStr);
-  const outTime = new Date(log.clockOut).getTime();
-  let diffMins = Math.round((outTime - adjustedInTime) / 60000);
-
-  if (log.breaks && Array.isArray(log.breaks)) {
-    log.breaks.forEach((b: any) => {
-      if (b.endTime) {
-        const bDiff = Math.round((new Date(b.endTime).getTime() - new Date(b.startTime).getTime()) / 60000);
-        diffMins -= bDiff;
-      }
-    });
-  }
-
-  const otMins = Math.max(0, diffMins - 480);
-
+  const d = calculateAdjustedDuration(log.clockIn, log.clockOut, log.breaks, workingStartTimeStr, lunchStartStr, lunchEndStr);
+  const otMins = Math.max(0, d - 480);
   return {
-    totalHours: Math.max(0, diffMins / 60),
+    totalHours: Math.max(0, d / 60),
     overtimeHours: Math.max(0, otMins / 60)
   };
 };
@@ -239,6 +299,7 @@ const Payroll = () => {
   // Data States
   const [payrollData, setPayrollData] = useState<any[]>([]);
   const [sites, setSites] = useState<any[]>([]);
+  const [holidays, setHolidays] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [toasts, setToasts] = useState<any[]>([]);
@@ -311,12 +372,14 @@ const Payroll = () => {
 
   const loadPayrollData = async () => {
     try {
-      const [data, sitesData] = await Promise.all([
+      const [data, sitesData, holidaysData] = await Promise.all([
         fetchPayroll(),
-        fetchSites()
+        fetchSites(),
+        fetchHolidays().catch(() => [])
       ]);
       setPayrollData(data);
       setSites(sitesData);
+      setHolidays(holidaysData);
     } catch (err) {
       addToast(t('failedLoadPayrollIntel'), 'error');
     } finally {
@@ -550,26 +613,28 @@ const Payroll = () => {
     let otMins = 0;
     const rate = selectedEmployeeRecord.employee.hourlyRate || 25;
 
-    // We fetch holidays to adjust calculation appropriately
-    // But since holidays list is not fully available locally, we check against logs info
     logs.forEach((log: any) => {
-      // Basic fallback duration calculation
-      const inTime = new Date(log.clockIn).getTime();
-      const outTime = new Date(log.clockOut).getTime();
-      let diffMins = Math.round((outTime - inTime) / 60000);
+      if (!log.clockIn || !log.clockOut) return;
+      const siteId = log.siteId || selectedEmployeeRecord.employee?.siteId;
+      const logSite = sites.find((s: any) => s.id === siteId);
+      const workingStartTime = logSite?.workingStartTime || '07:00';
+      const d = calculateAdjustedDuration(log.clockIn, log.clockOut, log.breaks, workingStartTime, logSite?.lunchStartTime, logSite?.lunchEndTime);
 
-      // Subtract breaks
-      if (log.breaks && Array.isArray(log.breaks)) {
-        log.breaks.forEach((b: any) => {
-          if (b.endTime) {
-            const bDiff = Math.round((new Date(b.endTime).getTime() - new Date(b.startTime).getTime()) / 60000);
-            diffMins -= bDiff;
-          }
-        });
+      const logDate = new Date(log.date || log.clockIn);
+      const isSunday = logDate.getDay() === 0;
+      const isHoliday = holidays.some(h => {
+        const hDate = new Date(h.date);
+        return hDate.getFullYear() === logDate.getFullYear() &&
+               hDate.getMonth() === logDate.getMonth() &&
+               hDate.getDate() === logDate.getDate();
+      });
+
+      if (isSunday || isHoliday) {
+        otMins += d;
+      } else {
+        regMins += Math.min(480, d);
+        otMins += Math.max(0, d - 480);
       }
-
-      regMins += Math.min(480, diffMins);
-      otMins += Math.max(0, diffMins - 480);
     });
 
     const rh = regMins / 60;
@@ -586,7 +651,7 @@ const Payroll = () => {
       grossPay: earn,
       isPaid
     };
-  }, [selectedEmployeeRecord, selectedMonth, groupedMonths]);
+  }, [selectedEmployeeRecord, selectedMonth, groupedMonths, sites, holidays]);
 
   // Live Calculator Calculations
   const calculatedNet = useMemo(() => {
@@ -667,7 +732,7 @@ const Payroll = () => {
         return isDateInFilter(logDate, dateFilter, customStartDate, customEndDate);
       });
 
-      const dynamicPayroll = calculatePayrollForLogs(filteredAttendance, item.employee, sites);
+      const dynamicPayroll = calculatePayrollForLogs(filteredAttendance, item.employee, sites, holidays);
 
       return {
         ...item,
@@ -677,7 +742,7 @@ const Payroll = () => {
         filteredAttendance
       };
     });
-  }, [payrollData, searchTerm, designationFilter, siteFilter, dateFilter, customStartDate, customEndDate, sites]);
+  }, [payrollData, searchTerm, designationFilter, siteFilter, dateFilter, customStartDate, customEndDate, sites, holidays]);
 
   const dynamicStats = useMemo(() => {
     let totalPayout = 0;
@@ -1298,7 +1363,12 @@ const Payroll = () => {
                           const logSite = sites.find((s: any) => s.id === siteId);
                           const workingStartTime = logSite?.workingStartTime || '07:00';
 
-                          const { totalHours, overtimeHours } = getLogHoursAndOvertime(log, workingStartTime);
+                          const { totalHours, overtimeHours } = getLogHoursAndOvertime(
+                             log,
+                             workingStartTime,
+                             logSite?.lunchStartTime,
+                             logSite?.lunchEndTime
+                           );
                           checkInText = log.clockIn ? new Date(log.clockIn).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false }) : '--:--';
                           checkOutText = log.clockOut ? new Date(log.clockOut).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false }) : '--:--';
                           totalHoursText = totalHours > 0 ? `${totalHours.toFixed(1)}h` : '0.0h';

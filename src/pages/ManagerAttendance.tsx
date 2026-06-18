@@ -303,14 +303,14 @@ const ManagerAttendance: React.FC = () => {
   const handleStartVerification = async () => {
     if (!selectedEmployee || submitting) return;
 
-    // Time restriction: prevent clock-in after 5 PM
+    // Time restriction: prevent clock-in after 7 PM
     const isClockingIn = !getActiveSession(selectedEmployee.id);
     if (isClockingIn) {
       const currentHour = new Date().getHours();
-      if (currentHour >= 17) {
+      if (currentHour >= 19) {
         setStep('location_failed'); // Reuse error UI
         setStatusMessage("Time Restriction");
-        setErrorDetail("Clock-in is not allowed after 5:00 PM.");
+        setErrorDetail("Clock-in is not allowed after 7:00 PM.");
         return;
       }
     }
