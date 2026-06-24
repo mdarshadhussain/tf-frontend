@@ -1244,7 +1244,7 @@ const Dashboard = () => {
             ) : (
               <div className="notifications-list-watt">
                 {(stats?.recentLogs || []).length > 0 ? (
-                  stats.recentLogs.slice(0, 5).map((log: any, idx: number) => (
+                  stats.recentLogs.slice(0, 4).map((log: any, idx: number) => (
                     <div key={idx} className="notification-item-watt">
                       <div className={`n-icon-watt ${log.type === 'ALERT' ? 'alert' : 'approved'}`}>
                         {log.type === 'ALERT' ? <Clock size={14} /> : <CheckCircle2 size={14} />}
