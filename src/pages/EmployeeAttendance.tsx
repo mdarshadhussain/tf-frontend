@@ -600,7 +600,9 @@ const EmployeeAttendance = () => {
         <motion.div key={d} className={`cal-dot-box ${status || ''} ${new Date().toDateString() === dateObj.toDateString() ? 'today' : ''}`} whileHover={{ scale: 1.05 }}>
           <span className="dot-date">{d}</span>
           {status === 'absent' ? (
-            <span className="dot-absent" style={{ color: '#ef4444', fontWeight: 600, fontSize: '0.8rem' }}>Absent</span>
+            <span className="dot-absent" style={{ color: '#ef4444', fontWeight: 700, fontSize: '8px', marginTop: '2px' }}>
+              {i18n.language === 'vi' ? 'Vắng' : 'Abs'}
+            </span>
           ) : (
             hours > 0 && <span className="dot-hours">{hours.toFixed(1)}h</span>
           )}

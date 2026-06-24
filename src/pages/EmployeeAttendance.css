@@ -980,7 +980,7 @@
 }
 
 /* ── Tablet / Desktop — side-by-side layout ── */
-@media (min-width: 640px) {
+@media (min-width: 850px) {
   .employee-att-container {
     padding: 24px 24px 48px;
     gap: 20px;
@@ -1030,5 +1030,68 @@
 @media (min-width: 1024px) {
   .employee-att-container {
     max-width: 1100px;
+  }
+}
+
+@media (max-width: 480px) {
+  .att-dashboard-grid {
+    padding: 0 8px 8px !important;
+    gap: 12px !important;
+  }
+
+  .calendar-main-card {
+    padding: 12px 10px !important;
+  }
+  
+  .calendar-matrix-grid {
+    padding: 8px 6px !important;
+    gap: 4px !important;
+  }
+  
+  .cal-dot-box {
+    border-radius: 8px !important;
+  }
+
+  .cal-day-header {
+    font-size: 8px !important;
+    padding-bottom: 4px !important;
+  }
+
+  .cal-dot-box .dot-date {
+    font-size: 10px !important;
+  }
+
+  .cal-dot-box .dot-hours {
+    font-size: 7px !important;
+    margin-top: 1px !important;
+  }
+
+  .cal-dot-box .dot-absent {
+    font-size: 6px !important;
+    margin-top: 1px !important;
+  }
+}
+
+@media (max-width: 360px) {
+  .att-dashboard-grid {
+    padding: 0 4px 4px !important;
+  }
+
+  .calendar-main-card {
+    padding: 8px 6px !important;
+  }
+
+  .calendar-matrix-grid {
+    padding: 6px 4px !important;
+    gap: 3px !important;
+  }
+
+  .cal-dot-box .dot-date {
+    font-size: 9px !important;
+  }
+
+  .cal-dot-box .dot-hours,
+  .cal-dot-box .dot-absent {
+    font-size: 5.5px !important;
   }
 }
