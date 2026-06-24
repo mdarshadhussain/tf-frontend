@@ -1905,8 +1905,8 @@ const Payroll = () => {
 
       <AnimatePresence>
         {showProofModal && selectedProofLog && (() => {
-          const checkinTimeText = selectedProofLog.clockIn ? new Date(selectedProofLog.clockIn).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '—';
-          const checkoutTimeText = selectedProofLog.clockOut ? new Date(selectedProofLog.clockOut).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '—';
+          const checkinTimeText = selectedProofLog.clockIn ? new Date(selectedProofLog.clockIn).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false }) : '—';
+          const checkoutTimeText = selectedProofLog.clockOut ? new Date(selectedProofLog.clockOut).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false }) : '—';
           const siteId = selectedProofLog.siteId || selectedEmployeeRecord?.employee?.siteId;
           const logSite = sites.find((s: any) => s.id === siteId);
           const siteName = logSite?.name || 'Unknown Site';

@@ -736,7 +736,7 @@ const EmployeeAttendance = () => {
                         : 'You have been marked as absent for today.'}
                     </p>
                   </div>
-                ) : logs.length >= 2 && !isClockedIn ? (
+                ) : logs.length >= 1 && !isClockedIn ? (
                   <div className="attendance-submitted-banner" style={{
                     display: 'flex',
                     flexDirection: 'column',
@@ -778,8 +778,8 @@ const EmployeeAttendance = () => {
                       lineHeight: '1.4'
                     }}>
                       {i18n.language === 'vi' 
-                        ? 'Bạn đã hoàn thành giới hạn 2 lần chấm công cho ngày hôm nay.' 
-                        : 'You have completed your daily limit of 2 attendance submissions for today.'}
+                        ? 'Bạn đã hoàn thành giới hạn 1 lần chấm công cho ngày hôm nay.' 
+                        : 'You have completed your daily limit of 1 attendance submission for today.'}
                     </p>
                   </div>
                 ) : (

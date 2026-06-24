@@ -843,7 +843,7 @@ const ManagerAttendance: React.FC = () => {
                             <label style={{ display: 'block', fontSize: '11px', color: 'var(--text-tertiary)' }}>{t('clockIn')}</label>
                             <strong style={{ fontSize: '14px', color: 'var(--text-primary)' }}>
                               {selectedEmpLogs.length > 0 && selectedEmpLogs[selectedEmpLogs.length - 1].clockIn && selectedEmpLogs[selectedEmpLogs.length - 1].status !== 'ABSENT'
-                                ? new Date(selectedEmpLogs[selectedEmpLogs.length - 1].clockIn).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                                ? new Date(selectedEmpLogs[selectedEmpLogs.length - 1].clockIn).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })
                                 : '--:--'}
                             </strong>
                           </div>

@@ -279,7 +279,7 @@ const Dashboard = () => {
       setShowAttendancePrompt(false);
       const destination = user.role === 'EMPLOYEE' ? '/attendance' : '/attendance/manager';
       
-      const limitReached = todayLogsCount >= 2 && !isClockedIn;
+      const limitReached = todayLogsCount >= 1 && !isClockedIn;
       
       if (limitReached || isAbsentToday) {
         navigate(destination);
@@ -1042,7 +1042,7 @@ const Dashboard = () => {
             className={`banner-btn ${
               isAbsentToday
                 ? 'absent'
-                : todayLogsCount >= 2 && !isClockedIn 
+                : todayLogsCount >= 1 && !isClockedIn 
                 ? 'completed' 
                 : isClockedIn 
                 ? 'clock-out' 
@@ -1050,13 +1050,13 @@ const Dashboard = () => {
             }`}
             style={isAbsentToday
               ? { background: '#ef4444', color: '#ffffff', cursor: 'default' } 
-              : todayLogsCount >= 2 && !isClockedIn 
+              : todayLogsCount >= 1 && !isClockedIn 
               ? { background: '#10B981', color: '#ffffff', cursor: 'default' } 
               : undefined}
           >
             {isAbsentToday
               ? (i18n.language === 'vi' ? 'Vắng mặt' : 'Absent')
-              : todayLogsCount >= 2 && !isClockedIn
+              : todayLogsCount >= 1 && !isClockedIn
               ? (i18n.language === 'vi' ? 'Đã nộp' : 'Submitted')
               : isClockedIn 
               ? (i18n.language === 'vi' ? 'Ra ca' : 'Clock Out') 

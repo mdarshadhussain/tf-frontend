@@ -350,11 +350,11 @@ const EmployeeDetails = () => {
                   <div className="log-details-cluster">
                     <div className="time-row">
                       <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                        <Clock size={14} color="#10b981" /> {t('checkin')}: <strong>{new Date(log.clockIn).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</strong>
+                        <Clock size={14} color="#10b981" /> {t('checkin')}: <strong>{new Date(log.clockIn).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })}</strong>
                       </span>
                       {log.clockOut ? (
                         <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                          <Clock size={14} color="#ef4444" /> {t('checkout')}: <strong>{new Date(log.clockOut).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</strong>
+                          <Clock size={14} color="#ef4444" /> {t('checkout')}: <strong>{new Date(log.clockOut).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })}</strong>
                         </span>
                       ) : (
                         <span className="status-badge-premium pending">{t('active')}</span>
